@@ -294,25 +294,27 @@ Final AI Response
 
 ### Recruiter Mode
 
-_Add screenshot here_
+![Recruiter](screenshots/recruiter.png)
 
 ---
 
 ### ATS Score
 
-_Add screenshot here_
+![ATS](screenshots/ats.png)
+![ATS](screenshots/ats1.png)
 
 ---
 
 ### AI Resume Review
 
-_Add screenshot here_
+![Review](screenshots/review.png)
+![Review](screenshots/review1.png)
 
 ---
 
 ### Resume Chat
 
-_Add screenshot here_
+![Chat](screenshots/chat.png)
 
 ---
 
