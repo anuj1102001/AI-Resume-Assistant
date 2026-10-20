@@ -1,0 +1,21 @@
+Kavya Iyer
+Chennai | kavya.iyer@example.com | +91 94440 77889 | github.com/kavyaiyer
+
+About Me
+AI engineer building LLM applications with a focus on evaluation and reliability.
+
+Employment History
+AI Engineer, Northstar Legal Tech — March 2024 to Present
+1. Built a contract question-answering system with hybrid retrieval (BM25 and embeddings) and citation checking over 40,000 documents.
+2. Created an evaluation suite of 600 labelled questions measuring retrieval recall and answer faithfulness, run in CI on every change.
+3. Reduced average LLM cost per query by 35% with response caching and smaller models for classification.
+
+Software Engineer, Brightpath Edtech — June 2021 to February 2024
+1. Developed Django and React features for a learning platform with 50,000 students.
+2. Introduced structured logging and OpenTelemetry tracing across six services.
+
+Academic Background
+B.Tech, Information Technology, Anna University, 2017 – 2021
+
+Skills & Tools
+Python, TypeScript, LLMs, RAG, prompt engineering, embeddings, pgvector, PostgreSQL, FastAPI, Django, React, Docker, GCP, LLM evaluation

@@ -1,0 +1,21 @@
+Generative AI Engineer — Lattice Legal AI (Remote, India)
+
+We build AI assistants that lawyers trust. Every answer must be grounded in the client's documents.
+
+You will
+- Build retrieval-augmented generation (RAG) pipelines over large document collections.
+- Design evaluation suites that measure retrieval quality and answer faithfulness.
+- Ship and operate LLM-powered APIs in production.
+
+Must have
+- 3+ years of software engineering experience, including production Python.
+- Hands-on experience building RAG systems with embeddings and a vector database.
+- Experience evaluating LLM output (offline eval sets, faithfulness or hallucination metrics).
+- Experience with prompt engineering and structured outputs.
+- Experience deploying APIs with Docker on a cloud platform.
+
+Good to have
+- Experience reducing LLM latency or cost (caching, model routing).
+- Experience with fine-tuning (LoRA or similar).
+- Legal or compliance domain experience.
+- Observability for LLM systems (tracing, logging).

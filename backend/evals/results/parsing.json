@@ -1,0 +1,168 @@
+{
+  "summary": {
+    "v1": {
+      "files_parsed": "5/6",
+      "section_precision": 1.0,
+      "section_recall": 0.577,
+      "section_f1": 0.732,
+      "name_accuracy": 0.5,
+      "contact_recall": 0.533,
+      "roles_correct": "not extracted"
+    },
+    "v2": {
+      "files_parsed": "6/6",
+      "section_precision": 1.0,
+      "section_recall": 1.0,
+      "section_f1": 1.0,
+      "name_accuracy": 1.0,
+      "contact_recall": 1.0,
+      "roles_correct": "6/6"
+    }
+  },
+  "rows": [
+    {
+      "resume": "arjun",
+      "system": "v1",
+      "sections": [
+        "education"
+      ],
+      "name": "ARJUN MEHTA",
+      "missed_sections": [
+        "experience",
+        "skills",
+        "summary"
+      ]
+    },
+    {
+      "resume": "arjun",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "skills",
+        "summary"
+      ],
+      "name": "Arjun Mehta",
+      "missed_sections": []
+    },
+    {
+      "resume": "kavya",
+      "system": "v1",
+      "note": "format not supported"
+    },
+    {
+      "resume": "kavya",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "skills",
+        "summary"
+      ],
+      "name": "Kavya Iyer",
+      "missed_sections": []
+    },
+    {
+      "resume": "neha",
+      "system": "v1",
+      "sections": [
+        "education",
+        "experience",
+        "skills"
+      ],
+      "name": "NEHA KULKARNI",
+      "missed_sections": [
+        "interests",
+        "projects",
+        "summary"
+      ]
+    },
+    {
+      "resume": "neha",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "interests",
+        "projects",
+        "skills",
+        "summary"
+      ],
+      "name": "Neha Kulkarni",
+      "missed_sections": []
+    },
+    {
+      "resume": "priya",
+      "system": "v1",
+      "sections": [
+        "education",
+        "experience",
+        "skills",
+        "summary"
+      ],
+      "name": "Priya Raman",
+      "missed_sections": []
+    },
+    {
+      "resume": "priya",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "skills",
+        "summary"
+      ],
+      "name": "Priya Raman",
+      "missed_sections": []
+    },
+    {
+      "resume": "rohan",
+      "system": "v1",
+      "sections": [
+        "education",
+        "experience",
+        "publications",
+        "skills"
+      ],
+      "name": "Rohan Das",
+      "missed_sections": []
+    },
+    {
+      "resume": "rohan",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "publications",
+        "skills"
+      ],
+      "name": "Rohan Das",
+      "missed_sections": []
+    },
+    {
+      "resume": "vikram",
+      "system": "v1",
+      "sections": [
+        "education",
+        "experience",
+        "skills"
+      ],
+      "name": "Vikram Singh",
+      "missed_sections": [
+        "summary"
+      ]
+    },
+    {
+      "resume": "vikram",
+      "system": "v2",
+      "sections": [
+        "education",
+        "experience",
+        "skills",
+        "summary"
+      ],
+      "name": "Vikram Singh",
+      "missed_sections": []
+    }
+  ]
+}

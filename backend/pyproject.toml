@@ -1,0 +1,17 @@
+[project]
+name = "shortlist-api"
+version = "2.0.0"
+description = "Resume analysis API: readability checks, job matching with evidence, grounded Q&A and guarded rewrites."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008", "E501"]  # B008: FastAPI Depends() defaults are intended; E501: the formatter owns line length (long prose strings and SQL stay unbroken)

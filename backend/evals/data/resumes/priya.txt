@@ -1,0 +1,29 @@
+Priya Raman
+Bengaluru, India | priya.raman@example.com | +91 98450 12345 | linkedin.com/in/priya-raman-dev | github.com/priyaraman
+
+Summary
+Backend engineer with four years building payment and billing APIs in Go and Python. I care about reliable systems and clear on-call runbooks.
+
+Experience
+Senior Backend Engineer, Kestrel Payments
+Jan 2023 – Present
+• Cut checkout API p95 latency from 620 ms to 380 ms by moving fraud scoring to an asynchronous Kafka consumer.
+• Led the migration of 14 services from a shared MySQL database to per-service PostgreSQL schemas with zero downtime.
+• Designed an idempotency layer for payment retries that removed duplicate charges, previously about 40 a month.
+• Mentored three engineers and ran the team's weekly incident review.
+
+Software Engineer, Lumen Billing
+Jul 2021 – Dec 2022
+• Built REST APIs in Python (FastAPI) for invoice generation used by 2,000 business customers.
+• Wrote integration tests with pytest that raised coverage of the billing module from 45% to 82%.
+• Containerised the services with Docker and set up CI/CD with GitHub Actions.
+
+Education
+B.Tech, Computer Science and Engineering, National Institute of Technology, Tiruchirappalli
+2017 – 2021
+
+Skills
+Languages: Go, Python, SQL
+Data: PostgreSQL, MySQL, Redis, Kafka
+Infrastructure: Docker, Kubernetes, AWS, Terraform, GitHub Actions
+Practices: System design, observability with Prometheus and Grafana, code review

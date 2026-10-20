@@ -1,0 +1,8 @@
+{
+  "priya": {"sections": ["summary", "experience", "education", "skills"], "contact": ["email", "phone", "linkedin", "github"], "name": "Priya Raman", "roles": 2, "min_years": 4.5, "bullets": 7},
+  "arjun": {"sections": ["summary", "experience", "education", "skills"], "contact": ["email", "phone"], "name": "Arjun Mehta", "roles": 2, "min_years": 5.5, "bullets": 7},
+  "neha": {"sections": ["summary", "education", "experience", "projects", "skills", "interests"], "contact": ["email", "phone"], "name": "Neha Kulkarni", "roles": 1, "min_years": 0.4, "bullets": 5, "expect_checks": {"personal": "warn", "openers": "warn"}},
+  "rohan": {"sections": ["experience", "education", "skills", "publications"], "contact": ["email", "phone", "linkedin"], "name": "Rohan Das", "roles": 2, "min_years": 6, "bullets": 5, "expect_checks": {"columns": "warn"}},
+  "kavya": {"sections": ["summary", "experience", "education", "skills"], "contact": ["email", "phone", "github"], "name": "Kavya Iyer", "roles": 2, "min_years": 5, "bullets": 5},
+  "vikram": {"sections": ["summary", "experience", "education", "skills"], "contact": ["email"], "name": "Vikram Singh", "roles": 2, "min_years": 7, "bullets": 4, "expect_checks": {"contact": "warn", "bullet_length": "warn", "pronouns": "info"}}
+}

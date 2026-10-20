@@ -1,0 +1,28 @@
+NEHA KULKARNI
+Email: neha.k@example.com   Mobile: +91-9876501234
+Date of Birth: 14/02/2002   Marital Status: Unmarried   Nationality: Indian
+
+CAREER OBJECTIVE
+To obtain a challenging position as a data analyst in a reputed organisation where I can use my skills.
+
+EDUCATION
+B.Sc. Statistics, Fergusson College, Pune — 82%
+06/2020 – 05/2023
+
+INTERNSHIPS
+Data Analyst Intern, Spice Route Retail
+06/2023 – 12/2023
+• Responsible for preparing weekly sales reports in Excel for 35 stores.
+• Worked on a Power BI dashboard tracking inventory turnover, used by the regional manager.
+• Helped clean point-of-sale data using Python and Pandas.
+
+ACADEMIC PROJECTS
+Customer Churn Analysis
+• Built a logistic regression model in Python to predict churn for a telecom dataset with 7,000 customers, reaching 79% accuracy.
+• Presented findings to faculty with charts made in Tableau.
+
+TECHNICAL SKILLS
+Python, Pandas, SQL, Excel, Power BI, Tableau, Statistics
+
+HOBBIES
+Reading, badminton
