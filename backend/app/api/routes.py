@@ -85,6 +85,15 @@ def delete_resume(
     return Response(status_code=204)
 
 
+@router.get("/resumes/{rid}/pages/{page_no}")
+def page_text(rid: str, page_no: int, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    resumes.get_resume(db, ws, rid)
+    text = resumes.pages_text(db, rid).get(page_no)
+    if text is None:
+        raise AppError("Page not found.", 404, "NOT_FOUND")
+    return {"page": page_no, "text": text}
+
+
 @router.get("/resumes/{rid}/pages/{page_no}/image")
 def page_image(
     rid: str,
