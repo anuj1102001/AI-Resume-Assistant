@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
-import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 
 // Shortlist's voice is direct and encouraging: a characterful grotesque for headings, a clean sans for everything else.
@@ -9,8 +8,8 @@ const sans = Geist({ subsets: ["latin"], weight: ["400", "500", "600"], variable
 const mono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Shortlist · Show your real experience, clearly", template: "%s · Shortlist" },
-  description: "Check how your resume reads, see how it matches a job requirement by requirement, and improve bullets without inventing anything.",
+  title: { default: "Shortlist · A stronger resume, with evidence", template: "%s · Shortlist" },
+  description: "Understand your strengths, uncover skill gaps and tailor your resume to the roles you want, with AI that explains its recommendations and quotes your resume as evidence.",
 };
 
 export const viewport: Viewport = {
@@ -24,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body>
-        <AppShell>{children}</AppShell>
+        {children}
       </body>
     </html>
   );

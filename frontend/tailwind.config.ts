@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Shortlist design tokens: cool paper, navy ink, a violet accent for action, lime for evidence, and three
+ * Shortlist design tokens: cool paper, charcoal-navy ink, an electric cobalt accent for action, lime for evidence, and three
  * support states (met, partly, not shown). Colours are CSS variables (see globals.css), so dark mode is a token swap.
  */
 const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
@@ -33,8 +33,8 @@ export default {
         "2xs": ["11px", "16px"],
       },
       borderRadius: {
-        card: "20px",
-        tile: "14px",
+        card: "14px",
+        tile: "10px",
       },
       boxShadow: {
         card: "0 1px 2px rgb(17 19 34 / 0.04), 0 4px 16px -6px rgb(17 19 34 / 0.08)",

@@ -29,7 +29,7 @@ export function Split({ doc, header, children, evidenceSide = false }: { doc: Vi
     </section>
   );
   return (
-    <div className="flex h-[calc(100dvh-68px)] flex-col">
+    <div className="flex h-[calc(100dvh-56px)] flex-col">
       {header}
       <div className="mx-3 mb-1 flex rounded-full bg-sunk p-1 lg:hidden" role="tablist" aria-label="View">
         {(evidenceSide ? (["insights", "document"] as const) : (["document", "insights"] as const)).map((p) => (

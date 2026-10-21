@@ -145,8 +145,10 @@ export default function CaseStudy() {
           <li>
             <strong>Its own identity, not Margin&apos;s.</strong> The first version reused Margin&apos;s editorial look (serif type, warm paper) with a green accent, and
             side by side the two read as one template. Margin serves careful readers; Shortlist serves job seekers who are often anxious and short of time. So
-            Shortlist moved to a direct grotesque typeface, cool paper, violet for actions and lime for evidence, pill-shaped controls, and a match report that
-            leads with the requirement checklist and keeps the resume beside it as evidence. The engineering core is still shared; the look isn&apos;t.
+            Shortlist moved to a direct grotesque typeface, a cool neutral paper, electric cobalt for actions and lime reserved for evidence, and a match report that
+            leads with the requirement checklist and keeps the resume beside it as evidence. It then grew a marketing site and a workspace with a sidebar, whose
+            overview recommends one next step worked out from what&apos;s actually in your workspace. The engineering core is still shared with Margin; the look
+            isn&apos;t.
           </li>
           <li>Keyboard-operable everywhere, skip link, ARIA tabs and meters, light and dark, and a phone layout that switches between resume and insights.</li>
         </ul>
@@ -220,7 +222,7 @@ export default function CaseStudy() {
       <Section n="09" title="Demo">
         <p>
           Start from the{" "}
-          <Link href="/" className="underline underline-offset-2">
+          <Link href="/app" className="underline underline-offset-2">
             dashboard
           </Link>{" "}
           with a sample resume and job. The live demo runs gemini-3.5-flash-lite on free hosting, so the first visit after a quiet spell takes up to a minute to wake the server.
