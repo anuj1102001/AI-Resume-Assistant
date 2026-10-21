@@ -1,12 +1,13 @@
 "use client";
 
 import clsx from "clsx";
-import { ArrowLeft, Columns2, Download, Lightbulb, List, Loader2, PenSquare } from "lucide-react";
+import { ArrowLeft, Columns2, Download, Lightbulb, List, Loader2, MessagesSquare, PenSquare } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { CitationChip, ClaimView, GroundingNote, Quote } from "@/components/claim";
-import { ComparisonRow } from "@/components/comparison";
+import { ComparisonRow, type MatchCtx } from "@/components/comparison";
+import { SaveButton } from "@/components/save-button";
 import { DocProvider, toViewerDoc } from "@/components/doc-context";
 import { BulletImprover } from "@/components/improver";
 import { Split } from "@/components/split";
@@ -82,6 +83,9 @@ export default function MatchPage() {
                 </Link>
               </p>
             </div>
+            <Link href={`/app/assistant?resume=${resume.id}&job=${job.id}`} className="btn-ghost hidden h-9 text-xs md:inline-flex">
+              <MessagesSquare className="h-3.5 w-3.5" aria-hidden /> Ask about this match
+            </Link>
             {jobs.length > 1 && (
               <select
                 className="input hidden h-9 w-52 py-0 text-xs sm:block"
@@ -110,7 +114,16 @@ export default function MatchPage() {
         </div>
         <div role="tabpanel" className="mx-auto max-w-[780px] px-4 pb-10 pt-2 sm:px-6">
           {tab === "match" ? (
-            <MatchTab kw={kw} match={match} loading={loading} error={matchError} onRetry={() => run()} onRefresh={() => run(true)} onTailor={() => setTab("tailor")} />
+            <MatchTab
+              kw={kw}
+              match={match}
+              loading={loading}
+              error={matchError}
+              onRetry={() => run()}
+              onRefresh={() => run(true)}
+              onTailor={() => setTab("tailor")}
+              ctx={{ resumeId: resume.id, jobId: job.id, jobTitle: job.title }}
+            />
           ) : (
             <TailorTab resume={resume} jobId={job.id} match={match?.result ?? null} />
           )}
@@ -130,7 +143,9 @@ function MatchTab({
   onRetry,
   onRefresh,
   onTailor,
+  ctx,
 }: {
+  ctx: MatchCtx;
   kw: Keywords | null;
   match: Analysis<MatchResult> | null;
   loading: boolean;
@@ -192,7 +207,7 @@ function MatchTab({
           </div>
           <ul className="space-y-2.5">
             {sorted.map((a) =>
-              view === "compare" ? <ComparisonRow key={a.requirement} a={a} onTailor={onTailor} /> : <AssessmentCard key={a.requirement} a={a} onTailor={onTailor} />,
+              view === "compare" ? <ComparisonRow key={a.requirement} a={a} onTailor={onTailor} ctx={ctx} /> : <AssessmentCard key={a.requirement} a={a} onTailor={onTailor} ctx={ctx} />,
             )}
           </ul>
           {match && <MetaLine meta={match.meta} onRefresh={onRefresh} refreshing={loading} />}
@@ -266,7 +281,7 @@ function KeywordPanel({ kw }: { kw: Keywords }) {
   );
 }
 
-function AssessmentCard({ a, onTailor }: { a: Assessment; onTailor: () => void }) {
+function AssessmentCard({ a, onTailor, ctx }: { a: Assessment; onTailor: () => void; ctx: MatchCtx }) {
   return (
     <li className="relative overflow-hidden rounded-tile border border-line bg-surface py-3.5 pl-5 pr-4 shadow-card">
       <span aria-hidden className={clsx("absolute inset-y-0 left-0 w-1.5", STATUS[a.status].bar)} />
@@ -283,12 +298,16 @@ function AssessmentCard({ a, onTailor }: { a: Assessment; onTailor: () => void }
       {a.suggestion && (
         <div className="mt-2.5 flex items-start gap-2 rounded-xl bg-accent-soft px-3 py-2 text-xs text-accent">
           <Lightbulb className="mt-px h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span>
+          <span className="flex-1">
             {a.suggestion}{" "}
             <button onClick={onTailor} className="font-medium underline underline-offset-2">
               Tailor a bullet
             </button>
           </span>
+          <SaveButton
+            className="-my-0.5 shrink-0"
+            item={{ kind: "gap", text: a.suggestion, detail: { context: `${ctx.jobTitle} · ${a.text}` }, resume_id: ctx.resumeId, job_id: ctx.jobId, href: `/match/${ctx.resumeId}/${ctx.jobId}` }}
+          />
         </div>
       )}
       {a.job_citations[0] && (

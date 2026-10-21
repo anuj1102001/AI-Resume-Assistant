@@ -95,6 +95,19 @@ CREATE TABLE IF NOT EXISTS usage_events (
   at REAL NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_usage ON usage_events(workspace_id, at);
+CREATE TABLE IF NOT EXISTS saved (
+  id TEXT PRIMARY KEY,
+  workspace_id TEXT NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  resume_id TEXT REFERENCES resumes(id) ON DELETE CASCADE,
+  job_id TEXT REFERENCES jobs(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL,        -- suggestion | gap | claim | answer
+  text TEXT NOT NULL,
+  detail TEXT,               -- context shown with it (JSON): where it came from, citations
+  href TEXT,                 -- where in the app it came from
+  done INTEGER NOT NULL DEFAULT 0,
+  created_at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_saved_ws ON saved(workspace_id, created_at);
 """
 
 

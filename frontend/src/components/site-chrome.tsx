@@ -94,6 +94,7 @@ export function SiteFooter() {
           title="Project"
           links={[
             ["Case study", "/case-study"],
+            ["Design system", "/design-system"],
             ["Source code", "https://github.com/anuj1102001/AI-Resume-Assistant"],
             ["Evaluation results", "https://github.com/anuj1102001/AI-Resume-Assistant/tree/main/backend/evals/results"],
           ]}

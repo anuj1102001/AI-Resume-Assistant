@@ -19,9 +19,15 @@ export const viewport: Viewport = {
   ],
 };
 
+// Applies the theme chosen in Settings before first paint, so there's no flash of the wrong theme.
+const THEME_SCRIPT = `try{var t=localStorage.getItem("shortlist.theme");if(t==="light"||t==="dark")document.documentElement.classList.add(t)}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         {children}
       </body>

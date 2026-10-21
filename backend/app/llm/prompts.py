@@ -1,6 +1,6 @@
 """Prompts, versioned. Bump PROMPT_VERSION whenever wording changes: cached analyses are keyed on it."""
 
-PROMPT_VERSION = "2026-10-21.2"
+PROMPT_VERSION = "2026-10-21.3"
 
 RULES = """Rules:
 - Use only the passages provided. Never add experience, skills, employers, titles, dates or numbers that the passages don't contain.
@@ -70,8 +70,22 @@ Surrounding context from the resume (for understanding only; don't import facts 
 {context}"""
 
 
-def answer_prompt(question: str, passages, history: list[tuple[str, str]]) -> str:
+def answer_prompt(question: str, passages, history: list[tuple[str, str]], job_passages=None) -> str:
     convo = "\n".join(f"{role}: {text}" for role, text in history[-6:])
+    if job_passages:
+        return f"""Answer the question using the resume passages (labels P1, P2...) and the job description passages (J1, J2...).
+- Facts about the candidate must cite P passages; facts about the role must cite J passages. Quote word for word.
+- Comparing the two (what the job asks that the resume does or doesn't show) is a judgement: mark those claims "inferred" and cite both.
+- General career advice that neither document supports is allowed only if the question asks for it: mark it "inferred" with no citations.
+- If the documents don't contain what's needed, set status not_found. Never suggest claiming experience the resume doesn't show.
+
+{f"Conversation so far:{chr(10)}{convo}{chr(10)}{chr(10)}" if convo else ""}Question: {question}
+
+Resume passages:
+{block(passages)}
+
+Job description passages:
+{block(job_passages)}"""
     return f"""Answer the question about this resume using only the passages. If they don't contain the answer, set status not_found.
 
 {f"Conversation so far:{chr(10)}{convo}{chr(10)}{chr(10)}" if convo else ""}Question: {question}

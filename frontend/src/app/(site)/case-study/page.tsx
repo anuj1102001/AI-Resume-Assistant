@@ -125,11 +125,12 @@ export default function CaseStudy() {
 
       <Section n="05" title="User journey and interface decisions">
         <ol className="list-decimal space-y-1 pl-5">
-          <li>Upload a resume (or a sample) and get the readability review straight away, with no AI wait.</li>
-          <li>Paste a job ad; Shortlist lists its requirements, each linked to the line of the ad it came from.</li>
-          <li>Open the match: coverage, required items met, then every requirement with its evidence. The instant keyword check shows while the AI works.</li>
-          <li>Click a quote: the resume page scrolls and highlights it, so you see exactly what a recruiter would.</li>
-          <li>Tailor bullets for this job, review the diff, and download a Word file.</li>
+          <li>Upload a resume (or a sample). Progress shows real bytes sent, then the server reading it; nothing is shown as done before it is.</li>
+          <li>Check what was found: sections with a type you can change, the dated roles behind &ldquo;years of experience&rdquo;, contact details and skills. Corrections re-run the checks.</li>
+          <li>Work in three panels: the resume, the analysis (overview, checks, and feedback by section) and an assistant for questions and rewrites.</li>
+          <li>Paste a job ad and open the match: coverage, then every requirement side by side with what the resume shows, and how each finding was reached.</li>
+          <li>Edit in the editor: original beside your version, rule-based clarity notes as you type, AI suggestions with fact checks, undo and redo, and a Word export.</li>
+          <li>Ask the assistant about your fit for a role. Answers cite the resume and the job ad, and say so when there isn&apos;t enough evidence. Keep what&apos;s useful under Saved.</li>
         </ol>
         <ul className="list-disc space-y-1 pl-5">
           <li>
@@ -150,7 +151,22 @@ export default function CaseStudy() {
             overview recommends one next step worked out from what&apos;s actually in your workspace. The engineering core is still shared with Margin; the look
             isn&apos;t.
           </li>
-          <li>Keyboard-operable everywhere, skip link, ARIA tabs and meters, light and dark, and a phone layout that switches between resume and insights.</li>
+          <li>
+            <strong>Honest about the AI.</strong> Facts carry a citation; comparisons are labelled &ldquo;Judgement&rdquo;; uncited advice is labelled &ldquo;General
+            advice&rdquo; rather than passed off as fact; every answer lists the passages the model was given.
+          </li>
+          <li>
+            <strong>Your data, your call.</strong> No account: a private browser workspace with a JSON export and a &ldquo;delete everything&rdquo; that removes
+            files from the server too.
+          </li>
+          <li>
+            Keyboard-operable everywhere, skip link, ARIA tabs and meters, light and dark (follow the system or choose), and panels that collapse to a switch on
+            phones. The tokens and components are documented on a{" "}
+            <Link href="/design-system" className="underline underline-offset-2">
+              live design-system page
+            </Link>{" "}
+            built from the real components.
+          </li>
         </ul>
       </Section>
 

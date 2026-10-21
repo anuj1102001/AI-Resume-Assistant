@@ -36,6 +36,20 @@ export type ResumeInfo = {
   check_counts: Record<CheckStatus, number>;
   created_at: number;
 };
+export type SavedKind = "suggestion" | "gap" | "claim" | "answer";
+export type SavedItem = {
+  id: string;
+  resume_id: string | null;
+  job_id: string | null;
+  kind: SavedKind;
+  text: string;
+  detail: { context?: string; source?: string; question?: string };
+  href: string | null;
+  done: boolean;
+  created_at: number;
+};
+export type NewSaved = { kind: SavedKind; text: string; detail?: SavedItem["detail"]; resume_id?: string | null; job_id?: string | null; href?: string | null };
+export type WorkspaceSummary = { created_at: number | null; resumes: number; jobs: number; analyses: number; saved: number };
 export type Corrections = { name?: string | null; contact?: Partial<Record<"email" | "phone" | "linkedin" | "github", string | null>>; section_keys?: Record<number, string>; skills?: string[] };
 export type ResumeFull = ResumeInfo & { parsed: Parsed; checks: Check[]; layout: { pages: number; multi_column_pages: number[]; tables: number; images: number } };
 
@@ -96,7 +110,7 @@ export type Answer = {
   status: "answered" | "partial" | "not_found";
   answer: Claim[];
   follow_ups: string[];
-  retrieval: { label: string; section: string; page: number; dense_rank: number | null; sparse_rank: number | null }[];
+  retrieval: { label: string; section: string; page: number | null; dense_rank: number | null; sparse_rank: number | null }[];
   grounding: Grounding;
 };
 
@@ -214,8 +228,21 @@ export const api = {
   locate: (id: string, page: number, q: string) =>
     request<{ rects: [number, number, number, number][] }>(`/api/resumes/${id}/pages/${page}/locate?q=${encodeURIComponent(q.slice(0, 600))}`).then((r) => r.rects),
   profile: (id: string, refresh = false) => request<Analysis<Profile>>(`/api/resumes/${id}/profile`, post({ refresh })),
-  ask: (id: string, question: string, history: [string, string][]) => request<Analysis<Answer>>(`/api/resumes/${id}/ask`, post({ question, history })),
-  questions: (id: string) => request<{ analyses: Analysis<Answer>[] }>(`/api/resumes/${id}/questions`).then((r) => r.analyses),
+  ask: (id: string, question: string, history: [string, string][], job_id: string | null = null) =>
+    request<Analysis<Answer>>(`/api/resumes/${id}/ask`, post({ question, history, job_id })),
+  questions: (id: string, job_id: string | null = null) =>
+    request<{ analyses: Analysis<Answer>[] }>(`/api/resumes/${id}/questions${job_id ? `?job_id=${job_id}` : ""}`).then((r) => r.analyses),
+  saved: () => request<{ items: SavedItem[] }>("/api/saved").then((r) => r.items),
+  save: (item: NewSaved) => request<{ item: SavedItem }>("/api/saved", post(item)).then((r) => r.item),
+  setSavedDone: (id: string, done: boolean) => request<{ item: SavedItem }>(`/api/saved/${id}`, { method: "PATCH", body: JSON.stringify({ done }) }).then((r) => r.item),
+  deleteSaved: (id: string) => request<void>(`/api/saved/${id}`, { method: "DELETE" }),
+  workspace: () => request<WorkspaceSummary>("/api/workspace"),
+  exportWorkspace: () => request<unknown>("/api/workspace/export"),
+  /** Deletes everything server-side, then forgets the token so the next request starts a fresh workspace. */
+  deleteWorkspace: async () => {
+    await request<void>("/api/workspace", { method: "DELETE" });
+    resetWorkspace();
+  },
   rewrite: (id: string, bullet_id: string, job_id: string | null, refresh = false) => request<Analysis<Rewrite>>(`/api/resumes/${id}/rewrite`, post({ bullet_id, job_id, refresh })),
   saveTailored: (id: string, bullet_id: string, job_id: string | null, revised: string) =>
     request<{ revised: string; checks: VariantChecks }>(`/api/resumes/${id}/tailored`, post({ bullet_id, job_id, revised })),
