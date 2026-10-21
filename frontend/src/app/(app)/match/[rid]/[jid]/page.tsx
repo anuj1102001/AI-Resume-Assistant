@@ -1,16 +1,17 @@
 "use client";
 
 import clsx from "clsx";
-import { ArrowLeft, Download, Lightbulb, Loader2 } from "lucide-react";
+import { ArrowLeft, Columns2, Download, Lightbulb, List, Loader2, PenSquare } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { CitationChip, ClaimView, GroundingNote, Quote } from "@/components/claim";
+import { ComparisonRow } from "@/components/comparison";
 import { DocProvider, toViewerDoc } from "@/components/doc-context";
 import { BulletImprover } from "@/components/improver";
 import { Split } from "@/components/split";
 import { CoverageRing, ErrorBox, KindTag, Meter, MetaLine, SectionTitle, STATUS, StatusPill, Working } from "@/components/ui";
-import { api, describeError, type Analysis, type Assessment, type JobFull, type Keywords, type MatchResult, type ResumeFull, type Tailored } from "@/lib/api";
+import { api, describeError, type Analysis, type Assessment, type JobFull, type JobInfo, type Keywords, type MatchResult, type ResumeFull, type Tailored } from "@/lib/api";
 import { wordDiff } from "@/lib/diff";
 import { download } from "@/lib/download";
 
@@ -26,6 +27,8 @@ export default function MatchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("match");
+  const [jobs, setJobs] = useState<JobInfo[]>([]);
+  const router = useRouter();
 
   const run = (refresh = false) => {
     setLoading(true);
@@ -42,6 +45,7 @@ export default function MatchPage() {
       setJob(j);
     }, (e) => setError(describeError(e)));
     api.keywords(rid, jid).then(setKw, () => {});
+    api.overview().then((o) => setJobs(o.jobs), () => {});
     run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rid, jid]);
@@ -78,13 +82,27 @@ export default function MatchPage() {
                 </Link>
               </p>
             </div>
+            {jobs.length > 1 && (
+              <select
+                className="input hidden h-9 w-52 py-0 text-xs sm:block"
+                value={job.id}
+                onChange={(e) => router.push(`/match/${resume.id}/${e.target.value}`)}
+                aria-label="Compare this resume with another saved job"
+              >
+                {jobs.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.id === job.id ? `${j.title} (this job)` : `Compare with: ${j.title}`}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
         }
       >
         <div className="sticky top-0 z-10 bg-paper/90 px-4 pb-3 pt-1 backdrop-blur sm:px-6">
-          <div role="tablist" aria-label="Match tools" className="mx-auto flex w-fit gap-1 rounded-full border border-line bg-surface p-1 shadow-card lg:mx-0">
+          <div role="tablist" aria-label="Match tools" className="mx-auto flex w-fit gap-1 rounded-lg border border-line bg-surface p-1 lg:mx-0">
             {(["match", "tailor"] as const).map((t) => (
-              <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={clsx("rounded-full px-4 py-1.5 text-sm transition-colors", tab === t ? "bg-accent font-medium text-accent-ink" : "text-ink-2 hover:text-ink")}>
+              <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={clsx("rounded-md px-4 py-1.5 text-sm transition-colors", tab === t ? "bg-accent font-medium text-accent-ink" : "text-ink-2 hover:text-ink")}>
                 {t === "match" ? "Match" : "Tailor for this job"}
               </button>
             ))}
@@ -122,6 +140,7 @@ function MatchTab({
   onTailor: () => void;
 }) {
   const r = match?.result;
+  const [view, setView] = useState<"compare" | "list">("compare");
   const sorted = useMemo(
     () => (r ? [...r.assessments].sort((a, b) => (a.kind === b.kind ? ORDER[a.status] - ORDER[b.status] : a.kind === "must" ? -1 : 1)) : []),
     [r],
@@ -150,11 +169,31 @@ function MatchTab({
               </div>
             </>
           )}
-          <SectionTitle aside={<GroundingNote g={r.grounding} />}>Requirement by requirement</SectionTitle>
+          <SectionTitle
+            aside={
+              <div className="flex rounded-lg border border-line bg-surface p-0.5" role="group" aria-label="Layout">
+                {(
+                  [
+                    ["compare", Columns2, "Side by side"],
+                    ["list", List, "List"],
+                  ] as const
+                ).map(([v, Icon, label]) => (
+                  <button key={v} onClick={() => setView(v)} aria-pressed={view === v} className={clsx("inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs", view === v ? "bg-sunk font-medium text-ink" : "text-ink-3 hover:text-ink")}>
+                    <Icon className="h-3.5 w-3.5" aria-hidden /> {label}
+                  </button>
+                ))}
+              </div>
+            }
+          >
+            Requirement by requirement
+          </SectionTitle>
+          <div className="mb-3">
+            <GroundingNote g={r.grounding} />
+          </div>
           <ul className="space-y-2.5">
-            {sorted.map((a) => (
-              <AssessmentCard key={a.requirement} a={a} onTailor={onTailor} />
-            ))}
+            {sorted.map((a) =>
+              view === "compare" ? <ComparisonRow key={a.requirement} a={a} onTailor={onTailor} /> : <AssessmentCard key={a.requirement} a={a} onTailor={onTailor} />,
+            )}
           </ul>
           {match && <MetaLine meta={match.meta} onRefresh={onRefresh} refreshing={loading} />}
         </div>
@@ -277,7 +316,12 @@ function TailorTab({ resume, jobId, match }: { resume: ResumeFull; jobId: string
 
   return (
     <div>
-      <p className="text-sm text-ink-2">Rewrite bullets to speak to this job. Suggestions are tailored to its requirements but keep to your facts; anything new is flagged.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <p className="max-w-md text-sm text-ink-2">Rewrite bullets to speak to this job. Suggestions are tailored to its requirements but keep to your facts; anything new is flagged.</p>
+        <Link href={`/resume/${resume.id}/edit?job=${jobId}`} className="btn-secondary h-9 text-xs">
+          <PenSquare className="h-3.5 w-3.5" aria-hidden /> Open in editor
+        </Link>
+      </div>
       {changes.length > 0 && (
         <section className="mt-5 rounded-card border border-line bg-surface p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">

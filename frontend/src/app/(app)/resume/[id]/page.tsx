@@ -197,6 +197,9 @@ function Header({ resume, edited, onRenamed }: { resume: ResumeFull; edited: num
         <p className="truncate text-xs text-ink-3">{[resume.experience_years ? `~${resume.experience_years} years of experience` : null, c.email, c.phone].filter(Boolean).join(" · ")}</p>
       </div>
       <div className="flex w-full justify-end gap-2 sm:w-auto">
+        <Link href={`/resume/${resume.id}/edit`} className="btn-secondary h-9 text-xs" title="Edit every bullet, with suggestions and undo">
+          <PenLine className="h-3.5 w-3.5" aria-hidden /> Editor
+        </Link>
         <Link href={`/resume/${resume.id}/extracted`} className="btn-ghost h-9 text-xs" title="Correct what was read from the file">
           <Wrench className="h-3.5 w-3.5" aria-hidden /> Fix extraction
         </Link>
