@@ -62,7 +62,7 @@ export default function MatchPage() {
         evidenceSide
         header={
           <div className="flex items-center gap-3 px-4 pb-3 pt-4 sm:px-6">
-            <Link href="/" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
+            <Link href="/app" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="min-w-0 flex-1">

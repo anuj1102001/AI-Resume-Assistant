@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Shortlist: cool paper, navy ink, violet for action, lime for evidence. */
+/* Shortlist: cool neutral paper, charcoal-navy ink, electric cobalt for action, lime only for evidence highlights. */
 :root {
-  --paper: 246 247 251;
+  --paper: 246 247 250;
   --surface: 255 255 255;
   --sunk: 237 239 246;
   --line: 224 227 237;
   --ink: 17 19 34;
   --ink-2: 70 75 98;
   --ink-3: 98 103 126;
-  --accent: 88 56 240;
-  --accent-soft: 239 236 255;
+  --accent: 37 70 232;
+  --accent-soft: 233 238 255;
   --accent-ink: 255 255 255;
-  --mark: 190 242 100;
+  --mark: 217 249 157;
   --mark-strong: 101 163 13;
   --ok: 4 120 87;
   --ok-soft: 220 246 234;
@@ -34,10 +34,10 @@
     --ink: 238 239 248;
     --ink-2: 192 195 214;
     --ink-3: 150 154 178;
-    --accent: 167 150 255;
-    --accent-soft: 38 32 80;
-    --accent-ink: 14 10 38;
-    --mark: 163 214 70;
+    --accent: 128 156 255;
+    --accent-soft: 24 34 78;
+    --accent-ink: 8 14 40;
+    --mark: 190 242 100;
     --mark-strong: 163 230 53;
     --ok: 74 222 158;
     --ok-soft: 16 50 38;
@@ -77,7 +77,7 @@ body {
     @apply rounded-card border border-line bg-surface shadow-card;
   }
   .btn {
-    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 text-sm font-medium transition-[background-color,color,transform] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-[10px] px-4 text-sm font-medium transition-[background-color,color,transform] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
     @apply btn bg-accent text-accent-ink hover:bg-accent/90;
@@ -105,6 +105,18 @@ body {
     content: "";
     @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-surface/70 to-transparent;
     animation: shimmer 1.4s infinite;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
   }
 }
 

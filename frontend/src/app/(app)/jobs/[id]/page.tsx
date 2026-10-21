@@ -43,7 +43,7 @@ export default function JobPage() {
   return (
     <DocProvider docs={[]}>
       <div className="mx-auto max-w-3xl px-4 pb-24 pt-8 sm:px-6">
-        <Link href="/" className="btn-ghost -ml-2 h-8 px-2 text-xs">
+        <Link href="/app" className="btn-ghost -ml-2 h-8 px-2 text-xs">
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden /> Dashboard
         </Link>
         <h1 className="mt-2 font-display text-[34px] font-bold leading-tight tracking-[-0.03em]">{job.title}</h1>

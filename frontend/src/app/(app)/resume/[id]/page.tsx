@@ -38,7 +38,7 @@ export default function ResumePage() {
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
         <p className="font-display text-2xl">This resume isn&apos;t available.</p>
         <p className="mt-2 text-sm text-ink-2">{error}</p>
-        <Link href="/" className="btn-secondary mt-6">
+        <Link href="/app" className="btn-secondary mt-6">
           Back to the dashboard
         </Link>
       </div>
@@ -86,7 +86,7 @@ function Header({ resume, onRenamed }: { resume: ResumeFull; onRenamed: (label: 
   const c = resume.parsed.contact;
   return (
     <div className="flex items-center gap-3 px-4 pb-3 pt-4 sm:px-6">
-      <Link href="/" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
+      <Link href="/app" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
         <ArrowLeft className="h-4 w-4" />
       </Link>
       <div className="min-w-0 flex-1">
