@@ -90,7 +90,7 @@ class MatchOut(BaseModel):
 
 
 class Variant(BaseModel):
-    text: str = Field(description="The rewritten bullet.")
+    text: str = Field(description="The rewritten bullet exactly as it would appear on the resume, with no citation or notes.")
     rationale: str = Field(description="What changed and why, in one sentence.")
 
 

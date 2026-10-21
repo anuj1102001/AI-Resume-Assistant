@@ -1,6 +1,6 @@
 """Prompts, versioned. Bump PROMPT_VERSION whenever wording changes: cached analyses are keyed on it."""
 
-PROMPT_VERSION = "2026-10-21.1"
+PROMPT_VERSION = "2026-10-21.2"
 
 RULES = """Rules:
 - Use only the passages provided. Never add experience, skills, employers, titles, dates or numbers that the passages don't contain.
@@ -61,6 +61,7 @@ original states one, and stay under 30 words.
 Hard rules:
 - Keep every fact, number, tool and name from the original. Do not add numbers, metrics, tools, team sizes or outcomes it doesn't state.
 - If a number would make it stronger but the original has none, write a placeholder in square brackets, e.g. "[X]%", and ask about it in questions.
+- Each version's text is only the bullet as it would appear on the resume: no citations, passage labels, quotes of the original or notes.
 {target}
 Original bullet:
 {bullet}

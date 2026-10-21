@@ -19,6 +19,14 @@ from app.resume.skills import find_skills
 from app.services import grounded, jobs, resumes
 
 _PLACEHOLDER = re.compile(r"\[[^\]]*\]")
+# Smaller models sometimes append their citation to the bullet itself: '... consumer (Passage: "Cut checkout ...").'
+_TRAILING_CITATION = re.compile(r"\s*\((?:passage|source|citation|p\d+)\b[^()]*(?:\([^()]*\)[^()]*)*\)\s*(\.?)\s*$", re.I)
+
+
+def clean_variant(text: str) -> str:
+    """Strip a citation the model attached to the rewrite, keeping the final full stop."""
+    cleaned = _TRAILING_CITATION.sub(r"\1", text.strip())
+    return cleaned.strip() or text.strip()
 
 
 def validate_variant(variant: str, original: str, resume_text: str) -> dict:
@@ -61,7 +69,10 @@ def rewrite(db: Database, llm: LLM, ws_id: str, rid: str, bullet_id: str, jid: s
         schema=RewriteOut,
         temperature=0.6,
     )
-    variants = [{**v.model_dump(), "checks": validate_variant(v.text, original, resume["text"])} for v in out.variants]
+    variants = []
+    for v in out.variants:
+        text = clean_variant(v.text)
+        variants.append({"text": text, "rationale": v.rationale, "checks": validate_variant(text, original, resume["text"])})
     result = {"bullet_id": bullet_id, "original": original, "variants": variants, "questions": out.questions}
     return grounded.save(db, ws_id, "rewrite", key, rid, jid, {"bullet_id": bullet_id}, result, usage)
 

@@ -42,3 +42,14 @@ def test_rewrite_guardrails_flag_invented_numbers_and_skills():
         "Reduced analytics infrastructure costs by [X]% on AWS", "Reduced infrastructure costs for the analytics cluster.", resume
     )
     assert ok["new_numbers"] == [] and ok["new_skills"] == [] and ok["placeholders"] == ["[X]"]
+
+
+def test_clean_variant_strips_leaked_citation():
+    from app.services.rewrite import clean_variant
+
+    leaked = 'Reduced checkout API p95 latency from 620 ms to 380 ms (Passage: "Cut checkout API p95 latency from 620 ms to 380 ms.").'
+    assert clean_variant(leaked) == "Reduced checkout API p95 latency from 620 ms to 380 ms."
+    assert clean_variant("Led the migration of 14 services (P3)") == "Led the migration of 14 services"
+    # real parentheses in a bullet are kept
+    assert clean_variant("Expanded to new markets (from 3 to 5 regions).") == "Expanded to new markets (from 3 to 5 regions)."
+    assert clean_variant("Built REST APIs in Python (FastAPI).") == "Built REST APIs in Python (FastAPI)."
