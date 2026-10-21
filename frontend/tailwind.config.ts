@@ -1,8 +1,8 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Margin design tokens. One ink, warm paper, a highlighter for evidence, and three support states.
- * Colours are CSS variables (see globals.css) so dark mode is a token swap, not a second stylesheet.
+ * Shortlist design tokens: cool paper, navy ink, a violet accent for action, lime for evidence, and three
+ * support states (met, partly, not shown). Colours are CSS variables (see globals.css), so dark mode is a token swap.
  */
 const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
 
@@ -19,24 +19,25 @@ export default {
         line: v("line"),
         ink: { DEFAULT: v("ink"), 2: v("ink-2"), 3: v("ink-3") },
         accent: { DEFAULT: v("accent"), soft: v("accent-soft"), ink: v("accent-ink") },
-        mark: v("mark"),
+        mark: { DEFAULT: v("mark"), strong: v("mark-strong") },
         ok: { DEFAULT: v("ok"), soft: v("ok-soft") },
         warn: { DEFAULT: v("warn"), soft: v("warn-soft") },
         bad: { DEFAULT: v("bad"), soft: v("bad-soft") },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
         "2xs": ["11px", "16px"],
       },
       borderRadius: {
-        card: "14px",
+        card: "20px",
+        tile: "14px",
       },
       boxShadow: {
-        card: "0 1px 0 rgb(var(--line) / 1), 0 1px 3px rgb(0 0 0 / 0.04)",
+        card: "0 1px 2px rgb(17 19 34 / 0.04), 0 4px 16px -6px rgb(17 19 34 / 0.08)",
         lift: "0 12px 32px -12px rgb(0 0 0 / 0.18)",
         page: "0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px -8px rgb(0 0 0 / 0.12)",
       },

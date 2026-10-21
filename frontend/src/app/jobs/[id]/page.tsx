@@ -46,7 +46,7 @@ export default function JobPage() {
         <Link href="/" className="btn-ghost -ml-2 h-8 px-2 text-xs">
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden /> Dashboard
         </Link>
-        <h1 className="mt-2 font-serif text-[30px] font-semibold leading-tight tracking-tight">{job.title}</h1>
+        <h1 className="mt-2 font-display text-[34px] font-bold leading-tight tracking-[-0.03em]">{job.title}</h1>
         {job.company && <p className="text-sm text-ink-2">{job.company}</p>}
 
         <form

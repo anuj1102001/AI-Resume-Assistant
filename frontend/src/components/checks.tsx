@@ -29,8 +29,8 @@ export function ChecksReport({ checks, resumeId }: { checks: Check[]; resumeId: 
           ["Tips", tips.length, "text-accent"],
           ["Looks good", good.length, "text-ok"],
         ].map(([label, n, cls]) => (
-          <div key={label as string} className="rounded-lg border border-line bg-surface px-2 py-2.5">
-            <p className={clsx("font-serif text-2xl font-semibold", cls as string)}>{n as number}</p>
+          <div key={label as string} className="rounded-tile border border-line bg-surface px-2 py-3 shadow-card">
+            <p className={clsx("font-display text-[28px] font-bold leading-none", cls as string)}>{n as number}</p>
             <p className="text-2xs text-ink-3">{label}</p>
           </div>
         ))}
@@ -87,7 +87,7 @@ function CheckCard({ c, resumeId, open }: { c: Check; resumeId: string; open?: b
                   <button
                     onClick={() => e.page && show({ quote: e.text, status: "verified", source: "resume", source_id: resumeId, section: null, page: e.page })}
                     disabled={!e.page}
-                    className="w-full rounded-md border-l-2 border-mark bg-sunk/60 px-2.5 py-1.5 text-left font-serif text-[13.5px] italic text-ink-2 enabled:hover:bg-sunk"
+                    className="w-full rounded-r-lg border-l-[3px] border-mark-strong bg-mark/20 px-2.5 py-1.5 text-left text-[13.5px] text-ink-2 enabled:hover:bg-mark/25"
                     title={e.page ? "Show on the page" : undefined}
                   >
                     “{e.text.length > 220 ? e.text.slice(0, 220) + "…" : e.text}”

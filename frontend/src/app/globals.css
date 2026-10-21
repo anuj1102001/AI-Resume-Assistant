@@ -2,46 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Shortlist: cool paper, navy ink, violet for action, lime for evidence. */
 :root {
-  --paper: 250 249 246;
+  --paper: 246 247 251;
   --surface: 255 255 255;
-  --sunk: 243 241 236;
-  --line: 228 225 218;
-  --ink: 22 24 29;
-  --ink-2: 70 74 84;
-  --ink-3: 106 110 120;
-  --accent: 22 90 62;
-  --accent-soft: 228 242 235;
+  --sunk: 237 239 246;
+  --line: 224 227 237;
+  --ink: 17 19 34;
+  --ink-2: 70 75 98;
+  --ink-3: 98 103 126;
+  --accent: 88 56 240;
+  --accent-soft: 239 236 255;
   --accent-ink: 255 255 255;
-  --mark: 255 214 102;
-  --ok: 21 112 66;
-  --ok-soft: 229 243 235;
-  --warn: 150 90 0;
-  --warn-soft: 252 242 222;
-  --bad: 176 36 26;
-  --bad-soft: 252 233 231;
+  --mark: 190 242 100;
+  --mark-strong: 101 163 13;
+  --ok: 4 120 87;
+  --ok-soft: 220 246 234;
+  --warn: 161 92 7;
+  --warn-soft: 254 242 205;
+  --bad: 190 18 60;
+  --bad-soft: 255 228 235;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --paper: 17 18 21;
-    --surface: 24 26 30;
-    --sunk: 31 33 38;
-    --line: 46 49 56;
-    --ink: 236 236 232;
-    --ink-2: 190 192 196;
-    --ink-3: 150 153 160;
-    --accent: 122 206 162;
-    --accent-soft: 22 46 36;
-    --accent-ink: 10 24 17;
-    --mark: 150 118 36;
-    --ok: 120 205 155;
-    --ok-soft: 24 48 36;
-    --warn: 232 185 95;
-    --warn-soft: 56 44 20;
-    --bad: 242 138 128;
-    --bad-soft: 62 29 27;
+    --paper: 12 13 22;
+    --surface: 21 22 36;
+    --sunk: 29 31 48;
+    --line: 45 48 70;
+    --ink: 238 239 248;
+    --ink-2: 192 195 214;
+    --ink-3: 150 154 178;
+    --accent: 167 150 255;
+    --accent-soft: 38 32 80;
+    --accent-ink: 14 10 38;
+    --mark: 163 214 70;
+    --mark-strong: 163 230 53;
+    --ok: 74 222 158;
+    --ok-soft: 16 50 38;
+    --warn: 250 196 80;
+    --warn-soft: 60 44 12;
+    --bad: 252 122 150;
+    --bad-soft: 72 20 36;
     color-scheme: dark;
   }
 }
@@ -61,19 +64,20 @@ body {
 :focus-visible {
   outline: 2px solid rgb(var(--accent));
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 ::selection {
-  background: rgb(var(--mark) / 0.6);
+  background: rgb(var(--mark) / 0.7);
+  color: rgb(17 19 34);
 }
 
 @layer components {
   .card {
-    @apply rounded-card border border-line bg-surface;
+    @apply rounded-card border border-line bg-surface shadow-card;
   }
   .btn {
-    @apply inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 text-sm font-medium transition-[background-color,color,transform] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
     @apply btn bg-accent text-accent-ink hover:bg-accent/90;
@@ -85,16 +89,17 @@ body {
     @apply btn text-ink-2 hover:bg-sunk hover:text-ink;
   }
   .input {
-    @apply h-10 w-full rounded-lg border border-line bg-surface px-3 text-sm text-ink placeholder:text-ink-3 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20;
+    @apply h-11 w-full rounded-tile border border-line bg-surface px-3.5 text-sm text-ink placeholder:text-ink-3 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
   }
   .eyebrow {
-    @apply font-mono text-2xs uppercase tracking-[0.08em] text-ink-3;
+    @apply text-2xs font-semibold uppercase tracking-[0.12em] text-accent;
   }
+  /* Body copy for AI output and resume text: same family as the UI, a touch larger and looser. */
   .reading {
-    @apply font-serif text-[16px] leading-[1.65] text-ink;
+    @apply font-sans text-[15px] leading-[1.6] text-ink;
   }
   .skeleton {
-    @apply relative overflow-hidden rounded-md bg-sunk;
+    @apply relative overflow-hidden rounded-lg bg-sunk;
   }
   .skeleton::after {
     content: "";

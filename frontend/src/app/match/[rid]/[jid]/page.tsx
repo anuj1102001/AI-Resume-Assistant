@@ -9,7 +9,7 @@ import { CitationChip, ClaimView, GroundingNote, Quote } from "@/components/clai
 import { DocProvider, toViewerDoc } from "@/components/doc-context";
 import { BulletImprover } from "@/components/improver";
 import { Split } from "@/components/split";
-import { ErrorBox, KindTag, Meter, MetaLine, SectionTitle, StatusPill, Working } from "@/components/ui";
+import { CoverageRing, ErrorBox, KindTag, Meter, MetaLine, SectionTitle, STATUS, StatusPill, Working } from "@/components/ui";
 import { api, describeError, type Analysis, type Assessment, type JobFull, type Keywords, type MatchResult, type ResumeFull, type Tailored } from "@/lib/api";
 import { wordDiff } from "@/lib/diff";
 import { download } from "@/lib/download";
@@ -59,13 +59,15 @@ export default function MatchPage() {
     <DocProvider docs={[doc]}>
       <Split
         doc={doc}
+        evidenceSide
         header={
-          <div className="flex items-center gap-3 border-b border-line px-4 py-2.5 sm:px-6">
-            <Link href="/" className="btn-ghost h-8 w-8 p-0" aria-label="Back to dashboard">
+          <div className="flex items-center gap-3 px-4 pb-3 pt-4 sm:px-6">
+            <Link href="/" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="min-w-0 flex-1">
-              <h1 className="truncate font-serif text-[17px] font-semibold">{job.title}</h1>
+              <p className="eyebrow">Match report</p>
+              <h1 className="truncate font-display text-[22px] font-bold leading-tight tracking-[-0.02em]">{job.title}</h1>
               <p className="truncate text-xs text-ink-3">
                 <Link href={`/resume/${resume.id}`} className="hover:text-ink hover:underline">
                   {resume.label}
@@ -79,14 +81,16 @@ export default function MatchPage() {
           </div>
         }
       >
-        <div role="tablist" aria-label="Match tools" className="sticky top-0 z-10 flex gap-1 border-b border-line bg-paper px-4 pt-3">
-          {(["match", "tailor"] as const).map((t) => (
-            <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={clsx("-mb-px border-b-2 px-3 pb-2.5 pt-1 text-sm", tab === t ? "border-ink font-medium" : "border-transparent text-ink-3 hover:text-ink")}>
-              {t === "match" ? "Match" : "Tailor for this job"}
-            </button>
-          ))}
+        <div className="sticky top-0 z-10 bg-paper/90 px-4 pb-3 pt-1 backdrop-blur sm:px-6">
+          <div role="tablist" aria-label="Match tools" className="mx-auto flex w-fit gap-1 rounded-full border border-line bg-surface p-1 shadow-card lg:mx-0">
+            {(["match", "tailor"] as const).map((t) => (
+              <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)} className={clsx("rounded-full px-4 py-1.5 text-sm transition-colors", tab === t ? "bg-accent font-medium text-accent-ink" : "text-ink-2 hover:text-ink")}>
+                {t === "match" ? "Match" : "Tailor for this job"}
+              </button>
+            ))}
+          </div>
         </div>
-        <div role="tabpanel" className="px-5 py-5">
+        <div role="tabpanel" className="mx-auto max-w-[780px] px-4 pb-10 pt-2 sm:px-6">
           {tab === "match" ? (
             <MatchTab kw={kw} match={match} loading={loading} error={matchError} onRetry={() => run()} onRefresh={() => run(true)} onTailor={() => setTab("tailor")} />
           ) : (
@@ -147,7 +151,7 @@ function MatchTab({
             </>
           )}
           <SectionTitle aside={<GroundingNote g={r.grounding} />}>Requirement by requirement</SectionTitle>
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {sorted.map((a) => (
               <AssessmentCard key={a.requirement} a={a} onTailor={onTailor} />
             ))}
@@ -160,45 +164,32 @@ function MatchTab({
 }
 
 function ScoreHeader({ r }: { r: MatchResult }) {
-  const pct = Math.round((r.score.coverage ?? 0) * 100);
-  const total = r.score.met + r.score.partial + r.score.missing;
+  const counts = [
+    ["met", r.score.met],
+    ["partial", r.score.partial],
+    ["missing", r.score.missing],
+  ] as const;
   return (
-    <section aria-label="Match summary" className="rounded-card border border-line bg-surface p-4">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow">Requirement coverage</p>
-          <p className="mt-1 font-serif text-[44px] font-semibold leading-none">{pct}%</p>
-        </div>
-        <p className="text-right text-sm text-ink-2">
-          <span className="font-medium text-ink">
-            {r.score.must_met} of {r.score.must_total}
-          </span>{" "}
-          required
-          <br />
-          shown on your resume
+    <section aria-label="Match summary" className="card flex flex-col items-center gap-5 p-5 sm:flex-row sm:items-center sm:gap-7">
+      <CoverageRing coverage={r.score.coverage ?? 0} />
+      <div className="min-w-0 flex-1 text-center sm:text-left">
+        <p className="eyebrow">Requirement coverage</p>
+        <p className="mt-1 font-display text-[26px] font-bold leading-tight tracking-[-0.02em]">
+          {r.score.must_met} of {r.score.must_total} required shown
+        </p>
+        <ul className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
+          {counts.map(([s, n]) => (
+            <li key={s} className={clsx("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", STATUS[s].cls)}>
+              <span className={clsx("h-2 w-2 rounded-full", STATUS[s].bar)} aria-hidden />
+              {n} {STATUS[s].label.toLowerCase()}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs leading-relaxed text-ink-3">
+          Required items count double, partial evidence half. This measures what your resume shows against this ad; it isn&apos;t a prediction of an interview or of
+          any ATS ranking.
         </p>
       </div>
-      <div className="mt-4 flex h-2.5 overflow-hidden rounded-full bg-sunk" role="img" aria-label={`${r.score.met} met, ${r.score.partial} partly, ${r.score.missing} not shown`}>
-        <span className="bg-ok" style={{ width: `${(r.score.met / total) * 100}%` }} />
-        <span className="bg-warn" style={{ width: `${(r.score.partial / total) * 100}%` }} />
-      </div>
-      <p className="mt-2 flex gap-4 text-xs text-ink-2">
-        <span>
-          <span className="mr-1 inline-block h-2 w-2 rounded-full bg-ok" />
-          {r.score.met} met
-        </span>
-        <span>
-          <span className="mr-1 inline-block h-2 w-2 rounded-full bg-warn" />
-          {r.score.partial} partly
-        </span>
-        <span>
-          <span className="mr-1 inline-block h-2 w-2 rounded-full bg-sunk ring-1 ring-line" />
-          {r.score.missing} not shown
-        </span>
-      </p>
-      <p className="mt-3 text-xs text-ink-3">
-        Required items count double. This measures what your resume shows against this ad; it isn&apos;t a prediction of an interview or of any ATS ranking.
-      </p>
     </section>
   );
 }
@@ -238,10 +229,11 @@ function KeywordPanel({ kw }: { kw: Keywords }) {
 
 function AssessmentCard({ a, onTailor }: { a: Assessment; onTailor: () => void }) {
   return (
-    <li className="rounded-lg border border-line bg-surface px-3 py-3">
+    <li className="relative overflow-hidden rounded-tile border border-line bg-surface py-3.5 pl-5 pr-4 shadow-card">
+      <span aria-hidden className={clsx("absolute inset-y-0 left-0 w-1.5", STATUS[a.status].bar)} />
       <div className="flex items-start gap-2">
         <StatusPill status={a.status} />
-        <p className="min-w-0 flex-1 text-sm font-medium">{a.text}</p>
+        <p className="min-w-0 flex-1 text-[15px] font-semibold leading-snug">{a.text}</p>
         <KindTag kind={a.kind} />
       </div>
       <p className="mt-1.5 text-sm text-ink-2">{a.explanation}</p>
@@ -250,7 +242,7 @@ function AssessmentCard({ a, onTailor }: { a: Assessment; onTailor: () => void }
         <Quote key={i} c={c} />
       ))}
       {a.suggestion && (
-        <div className="mt-2 flex items-start gap-2 rounded-md bg-accent-soft px-2.5 py-2 text-xs text-accent">
+        <div className="mt-2.5 flex items-start gap-2 rounded-xl bg-accent-soft px-3 py-2 text-xs text-accent">
           <Lightbulb className="mt-px h-3.5 w-3.5 shrink-0" aria-hidden />
           <span>
             {a.suggestion}{" "}

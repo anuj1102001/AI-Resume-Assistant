@@ -19,7 +19,7 @@ export default function CaseStudy() {
   return (
     <article className="mx-auto max-w-[760px] px-4 pb-24 pt-12 sm:px-6">
       <p className="eyebrow">Case study · AI engineering and product design</p>
-      <h1 className="mt-3 font-serif text-[40px] font-semibold leading-[1.1] tracking-tight">Shortlist: show your real experience, clearly</h1>
+      <h1 className="mt-3 font-display text-[44px] font-bold leading-[1.05] tracking-[-0.035em]">Shortlist: show your real experience, clearly</h1>
       <p className="mt-4 text-[17px] leading-relaxed text-ink-2">
         Shortlist began as a resume chatbot with an &ldquo;ATS score&rdquo;. Version 2 is a career tool built on one rule: it never helps you claim something your
         resume can&apos;t back up. It checks how your resume reads, matches it to a job requirement by requirement with quotes as evidence, and suggests rewrites
@@ -143,8 +143,10 @@ export default function CaseStudy() {
             <strong>Warnings beside the suggestion</strong>, not in a footnote: &ldquo;Adds 45, a number your original doesn&apos;t state&rdquo;.
           </li>
           <li>
-            <strong>Same system as Margin</strong> (type, spacing, evidence colours, states) with its own green accent, so both read as one portfolio and as distinct
-            products.
+            <strong>Its own identity, not Margin&apos;s.</strong> The first version reused Margin&apos;s editorial look (serif type, warm paper) with a green accent, and
+            side by side the two read as one template. Margin serves careful readers; Shortlist serves job seekers who are often anxious and short of time. So
+            Shortlist moved to a direct grotesque typeface, cool paper, violet for actions and lime for evidence, pill-shaped controls, and a match report that
+            leads with the requirement checklist and keeps the resume beside it as evidence. The engineering core is still shared; the look isn&apos;t.
           </li>
           <li>Keyboard-operable everywhere, skip link, ARIA tabs and meters, light and dark, and a phone layout that switches between resume and insights.</li>
         </ul>
@@ -247,7 +249,7 @@ function Section({ n, title, children }: { n: string; title: string; children: R
   return (
     <section className="mt-14">
       <p className="font-mono text-2xs text-ink-3">{n}</p>
-      <h2 className="mt-1 font-serif text-[26px] font-semibold tracking-tight">{title}</h2>
+      <h2 className="mt-1 font-display text-[28px] font-bold tracking-[-0.025em]">{title}</h2>
       <div className="mt-4 space-y-4 text-[16px] leading-relaxed">{children}</div>
     </section>
   );
