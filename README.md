@@ -30,6 +30,8 @@ The interface is a marketing site plus a workspace (overview with one recommende
 | ![Evidence](docs/screenshots/shortlist-evidence.png) | ![Tailor](docs/screenshots/shortlist-tailor.png) |
 | **Profile: skills shown vs only listed** | **Readability checks, no made-up score** |
 | ![Profile](docs/screenshots/shortlist-profile.png) | ![Review](docs/screenshots/shortlist-review.png) |
+| **Assistant: cites the resume and the job ad** | **Overview: one recommended next step** |
+| ![Assistant](docs/screenshots/shortlist-assistant.png) | ![Overview](docs/screenshots/shortlist-overview.png) |
 
 ## Architecture
 
