@@ -19,7 +19,9 @@ import argparse
 import contextlib
 import io
 import json
+import os
 import tempfile
+import time
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
@@ -88,14 +90,17 @@ def predict_llm(rows: list[dict], infos: dict) -> list[str]:
     if not base.gemini_api_key:
         raise SystemExit("GEMINI_API_KEY is not set in backend/.env; run without --llm or add a key.")
     preds = [""] * len(rows)
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:  # SQLite keeps the file open on Windows
         s = Settings(data_dir=Path(tmp), gemini_api_key=base.gemini_api_key, gemini_model=base.gemini_model)
         db, llm, emb = Database(s.db_path), build_llm(s), build_embedder(s.embedding_backend, s.embedding_model)
         ws, _ = create_workspace(db)
         groups = defaultdict(list)
         for i, r in enumerate(rows):
             groups[(r["resume"], r["job"])].append(i)
-        for (resume, _job), idxs in groups.items():
+        pause = float(os.environ.get("EVAL_PAUSE_S", "13"))  # free-tier keys allow ~5 requests a minute
+        for n, ((resume, _job), idxs) in enumerate(groups.items()):
+            if n:
+                time.sleep(pause)
             info = infos[resume]
             rec, _ = resumes.create_resume(db, s, emb, ws, info["fname"], info["data"])
             pool = resumes.candidates(db, rec["id"], emb.dim)
