@@ -33,10 +33,13 @@ def inspect_pdf(data: bytes) -> Layout:
         for i, page in enumerate(doc, start=1):
             if _is_multi_column(page):
                 multi.append(i)
-            try:
-                tables += len(page.find_tables().tables)
-            except Exception:  # table detection is best-effort
-                pass
+            # find_tables() briefly needs ~120 MB per page, enough to push a 512 MB container over its limit. Its default
+            # "lines" strategy builds tables from vector drawings, so a page without any can't contain one: skip it.
+            if page.get_drawings():
+                try:
+                    tables += len(page.find_tables().tables)
+                except Exception:  # table detection is best-effort
+                    pass
             images += len(page.get_images(full=False))
             fonts.update(f[3] for f in page.get_fonts())
         return Layout(doc.page_count, multi, tables, images, len(fonts))
