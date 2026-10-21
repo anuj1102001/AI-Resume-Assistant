@@ -1,7 +1,7 @@
 "use client";
 
 import { Dropzone } from "@/components/dropzone";
-import { BusyOverlay, ErrorLine, JobRow, PageTitle, Panel, ResumeRow } from "@/components/workspace-ui";
+import { BusyOverlay, ErrorLine, UploadProgress, JobRow, PageTitle, Panel, ResumeRow } from "@/components/workspace-ui";
 import { useWorkspace } from "@/lib/workspace";
 
 export default function ResumesPage() {
@@ -10,6 +10,7 @@ export default function ResumesPage() {
   return (
     <div className="mx-auto max-w-[960px] px-4 pb-24 pt-8 sm:px-8">
       <BusyOverlay text={ws.busy} />
+      <UploadProgress state={ws.uploading} />
       <ErrorLine message={ws.error} />
       <PageTitle title="My resumes" subtitle="Each resume keeps its checks, profile, rewrites and tailored versions. Deleting one removes all of them." />
       <div id="upload" className="mt-6 scroll-mt-24">

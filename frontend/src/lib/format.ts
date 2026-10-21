@@ -53,3 +53,22 @@ export function checkFile(file: { name: string; size: number }): string | null {
   if (file.size > MAX_UPLOAD_MB * 1024 * 1024) return `“${file.name}” is ${formatBytes(file.size)}; the limit is ${MAX_UPLOAD_MB} MB.`;
   return null;
 }
+
+/** Section types the parser knows, in the order a resume usually has them (matches backend SECTION_KEYS). */
+export const SECTION_TYPES: { key: string; label: string }[] = [
+  { key: "header", label: "Contact / header" },
+  { key: "summary", label: "Summary" },
+  { key: "experience", label: "Experience" },
+  { key: "projects", label: "Projects" },
+  { key: "education", label: "Education" },
+  { key: "skills", label: "Skills" },
+  { key: "certifications", label: "Certifications" },
+  { key: "achievements", label: "Achievements" },
+  { key: "publications", label: "Publications" },
+  { key: "volunteering", label: "Leadership & volunteering" },
+  { key: "languages", label: "Languages" },
+  { key: "interests", label: "Interests" },
+  { key: "other", label: "Other" },
+];
+
+export const sectionLabel = (key: string) => SECTION_TYPES.find((s) => s.key === key)?.label ?? key;

@@ -5,7 +5,7 @@ import { ArrowRight, Check, CircleAlert, FileText, Lightbulb, Sparkles } from "l
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Dropzone } from "@/components/dropzone";
-import { BusyOverlay, ErrorLine, JobRow, MatchRow, Panel, ResumeRow } from "@/components/workspace-ui";
+import { BusyOverlay, ErrorLine, UploadProgress, JobRow, MatchRow, Panel, ResumeRow } from "@/components/workspace-ui";
 import { api, type ResumeFull } from "@/lib/api";
 import { SAMPLES, useWorkspace, type Overview } from "@/lib/workspace";
 
@@ -28,6 +28,7 @@ export default function OverviewPage() {
   return (
     <div className="mx-auto max-w-[1180px] px-4 pb-24 pt-8 sm:px-8">
       <BusyOverlay text={ws.busy} />
+      <UploadProgress state={ws.uploading} />
       <ErrorLine message={ws.error} />
       {data === null && !ws.error ? (
         <div className="space-y-4" aria-busy="true" aria-label="Loading your workspace">

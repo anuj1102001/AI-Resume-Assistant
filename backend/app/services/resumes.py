@@ -17,8 +17,8 @@ from app.llm import prompts
 from app.llm.client import LLM
 from app.llm.schemas import ProfileOut
 from app.resume.checks import run_checks
-from app.resume.layout import inspect_pdf, no_layout
-from app.resume.sections import parse_resume
+from app.resume.layout import Layout, inspect_pdf, no_layout
+from app.resume.sections import SECTION_KEYS, parse_resume
 from app.retrieval.embeddings import Embedder
 from app.retrieval.search import Candidate
 from app.services import grounded
@@ -165,6 +165,85 @@ def delete_resume(db: Database, settings: Settings, ws_id: str, rid: str) -> Non
         c.execute("DELETE FROM resumes WHERE id = ?", (rid,))
         c.execute("DELETE FROM analyses WHERE resume_id = ?", (rid,))
     (settings.files_dir / f"{rid}{_EXT[row['kind']]}").unlink(missing_ok=True)
+
+
+CONTACT_FIELDS = ("email", "phone", "linkedin", "github")
+
+
+def correct_resume(
+    db: Database,
+    ws_id: str,
+    rid: str,
+    *,
+    name: str | None = None,
+    contact: dict[str, str | None] | None = None,
+    section_keys: dict[int, str] | None = None,
+    skills: list[str] | None = None,
+) -> dict:
+    """Apply the user's corrections to what the parser extracted, then re-run the checks.
+
+    Section types are re-applied by re-parsing the stored pages, so bullets, roles and years of experience follow the
+    corrected sections. Bullet ids are kept wherever the bullet text is unchanged, because saved rewrites refer to them.
+    Corrections accumulate and are stored with the parse, so they survive later edits.
+    """
+    row = get_resume(db, ws_id, rid)
+    old = loads(row["parsed"], {})
+    corr = old.get("corrections") or {}
+    n_sections = len(old.get("sections", []))
+    if section_keys:
+        for i, key in section_keys.items():
+            if not 0 <= i < n_sections:
+                raise AppError("That section doesn't exist.", 422, "BAD_SECTION")
+            if key not in SECTION_KEYS:
+                raise AppError(f"Unknown section type “{key}”.", 422, "BAD_SECTION")
+        corr["sections"] = {**corr.get("sections", {}), **{str(i): k for i, k in section_keys.items()}}
+    if name is not None:
+        corr["name"] = name.strip()[:80] or None
+    if contact is not None:
+        corr["contact"] = {**corr.get("contact", {}), **{k: ((v or "").strip()[:200] or None) for k, v in contact.items() if k in CONTACT_FIELDS}}
+    if skills is not None:
+        seen: dict[str, None] = {}
+        for s in skills:
+            s = s.strip()[:60]
+            if s and s.lower() not in {k.lower() for k in seen}:
+                seen[s] = None
+        corr["skills"] = list(seen)[:100]
+
+    pages = page_list(pages_text(db, rid))
+    parsed = parse_resume(pages, {int(i): k for i, k in corr.get("sections", {}).items()})
+
+    # Keep bullet ids stable for unchanged text; new bullets get ids after the highest one used so far.
+    old_ids = {b["text"]: b["id"] for b in old.get("bullets", [])}
+    used = {b["id"] for b in old.get("bullets", [])}
+    next_n = max((int(i[1:]) for i in used if i[1:].isdigit()), default=0) + 1
+    remap: dict[str, str] = {}
+    taken: set[str] = set()
+    for b in parsed.bullets:
+        keep = old_ids.get(b.text)
+        if keep and keep not in taken:
+            new = keep
+        else:
+            new, next_n = f"b{next_n}", next_n + 1
+        remap[b.id] = new
+        taken.add(new)
+    for b in parsed.bullets:
+        b.id = remap[b.id]
+    for e in parsed.entries:
+        e.bullets = [remap.get(i, i) for i in e.bullets]
+
+    if "name" in corr:
+        parsed.name = corr["name"]
+    if corr.get("contact"):
+        parsed.contact = {**parsed.contact, **corr["contact"]}
+    if "skills" in corr:
+        parsed.skills_listed = corr["skills"]
+
+    empty = [p.number for p in pages if not p.text.strip()]
+    checks = run_checks(parsed, Layout(**loads(row["layout"], {})), row["text"], empty)
+    data = parsed.to_dict() | {"corrections": corr}
+    with db.tx() as c:
+        c.execute("UPDATE resumes SET parsed = ?, checks = ? WHERE id = ?", (dumps(data), dumps(checks), rid))
+    return public_resume(get_resume(db, ws_id, rid), full=True)
 
 
 def candidates(db: Database, rid: str, dim: int | None = None) -> list[Candidate]:

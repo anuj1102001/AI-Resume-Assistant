@@ -6,6 +6,8 @@ import { api, describeError, type JobInfo, type MatchSummary, type ResumeInfo } 
 import { checkFile } from "./format";
 
 export type Overview = { resumes: ResumeInfo[]; jobs: JobInfo[]; matches: MatchSummary[] };
+/** A resume upload in flight: bytes sent (real progress), then the server reading it (no fake percentage). */
+export type UploadState = { name: string; sent: number; stage: "uploading" | "reading" };
 
 export const SAMPLES = [
   { resume: "priya.pdf", job: "backend-engineer.txt", title: "Backend engineer", who: "Priya, 5 years in payments", jobTitle: "Senior Backend Engineer" },
@@ -18,6 +20,7 @@ export function useWorkspace() {
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<UploadState | null>(null);
 
   const refresh = useCallback(() => api.overview().then(setData, (e) => setError(describeError(e))), []);
   useEffect(() => {
@@ -28,14 +31,14 @@ export function useWorkspace() {
     const f = files[0];
     const problem = checkFile(f);
     if (problem) return setError(problem);
-    setBusy(`Uploading and reading ${f.name}…`);
     setError(null);
+    setUploading({ name: f.name, sent: 0, stage: "uploading" });
     try {
-      const r = await api.uploadResume(f);
-      router.push(`/resume/${r.resume.id}`);
+      const r = await api.uploadResumeWithProgress(f, (sent) => setUploading({ name: f.name, sent, stage: sent >= 1 ? "reading" : "uploading" }));
+      router.push(r.duplicate ? `/resume/${r.resume.id}` : `/resume/${r.resume.id}/extracted`);
     } catch (e) {
       setError(describeError(e));
-      setBusy(null);
+      setUploading(null);
     }
   }
 
@@ -66,5 +69,5 @@ export function useWorkspace() {
   const resumeName = (id: string) => data?.resumes.find((r) => r.id === id)?.label ?? "Resume";
   const jobName = (id: string) => data?.jobs.find((j) => j.id === id)?.title ?? "Job";
 
-  return { data, error, setError, busy, refresh, upload, trySample, remove, resumeName, jobName };
+  return { data, error, setError, busy, uploading, refresh, upload, trySample, remove, resumeName, jobName };
 }
