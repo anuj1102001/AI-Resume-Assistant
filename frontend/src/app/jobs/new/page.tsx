@@ -28,7 +28,7 @@ export default function NewJobPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-24 pt-10 sm:px-6">
-      <h1 className="font-serif text-[30px] font-semibold tracking-tight">Add a job</h1>
+      <h1 className="font-display text-[34px] font-bold tracking-[-0.03em]">Add a job</h1>
       <p className="mt-1 text-sm text-ink-2">Paste the whole job description. Shortlist lists its requirements, then checks your resume against each one.</p>
       <form onSubmit={submit} className="card mt-6 space-y-4 p-5">
         <div className="grid gap-3 sm:grid-cols-2">

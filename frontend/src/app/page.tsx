@@ -1,12 +1,12 @@
 "use client";
 
 import clsx from "clsx";
-import { AlertTriangle, ArrowRight, Briefcase, FileText, Loader2, Plus, Trash2 } from "lucide-react";
+import { AlertTriangle, ArrowRight, Briefcase, FileText, Loader2, Plus, Sparkles, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Dropzone } from "@/components/dropzone";
-import { Meter } from "@/components/ui";
+import { CoverageRing, KindTag, StatusPill } from "@/components/ui";
 import { api, describeError, type JobInfo, type MatchSummary, type ResumeInfo } from "@/lib/api";
 import { checkFile, timeAgo } from "@/lib/format";
 
@@ -94,38 +94,50 @@ export default function Dashboard() {
           ))}
         </div>
       ) : empty ? (
-        <section className="mx-auto max-w-2xl pt-6 text-center animate-rise">
-          <p className="eyebrow">Resume and job matching</p>
-          <h1 className="mt-3 font-serif text-[40px] font-semibold leading-[1.1] tracking-tight sm:text-[52px]">Show your real experience, clearly.</h1>
-          <p className="mx-auto mt-4 max-w-xl text-[17px] leading-relaxed text-ink-2">
-            See how your resume reads to recruiters and tracking systems, how it matches a job requirement by requirement, and sharpen your bullets without
-            inventing anything.
-          </p>
-          <div className="mt-8 text-left">
-            <Dropzone onFiles={upload} />
-          </div>
-          <div className="mt-8">
-            <p className="eyebrow">Or try a sample match</p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              {SAMPLES.map((s) => (
-                <button key={s.resume} onClick={() => trySample(s)} className="card flex items-center gap-3 px-4 py-3 text-left transition-colors hover:border-ink-3">
-                  <FileText className="h-5 w-5 shrink-0 text-ink-3" aria-hidden />
-                  <span>
-                    <span className="block text-sm font-medium">{s.title}</span>
-                    <span className="block text-xs text-ink-3">{s.who} → {s.jobTitle}</span>
-                  </span>
-                </button>
-              ))}
+        <section className="grid items-center gap-10 pt-4 animate-rise lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14 lg:pt-10">
+          <div>
+            <p className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden /> Resume and job matching, with evidence
+            </p>
+            <h1 className="mt-5 font-display text-[44px] font-bold leading-[1.02] tracking-[-0.035em] sm:text-[60px]">
+              Show your real experience, <span className="rounded-md bg-mark px-1.5 text-[rgb(17_19_34)] [box-decoration-break:clone]">clearly.</span>
+            </h1>
+            <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-2">
+              See how your resume reads to recruiters and tracking systems, how it matches a job requirement by requirement, and sharpen your bullets without
+              inventing anything.
+            </p>
+            <div className="mt-8">
+              <Dropzone onFiles={upload} />
             </div>
-            <p className="mt-3 text-xs text-ink-3">Sample resumes and job ads are fictional, written for testing.</p>
+            <div className="mt-6">
+              <p className="text-sm font-medium text-ink-2">Or try a sample match</p>
+              <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
+                {SAMPLES.map((s) => (
+                  <button key={s.resume} onClick={() => trySample(s)} className="card group flex items-center gap-3 px-4 py-3 text-left transition-[border-color,transform] hover:-translate-y-0.5 hover:border-accent/50">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
+                      <FileText className="h-[18px] w-[18px]" aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold">{s.title}</span>
+                      <span className="block truncate text-xs text-ink-3">
+                        {s.who} → {s.jobTitle}
+                      </span>
+                    </span>
+                    <ArrowRight className="h-4 w-4 shrink-0 text-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden />
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2.5 text-xs text-ink-3">Sample resumes and job ads are fictional, written for testing.</p>
+            </div>
           </div>
+          <HeroPreview />
         </section>
       ) : (
         data && (
           <>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="font-serif text-[30px] font-semibold tracking-tight">Your applications</h1>
+                <h1 className="font-display text-[34px] font-bold tracking-[-0.03em]">Your applications</h1>
                 <p className="mt-1 text-sm text-ink-2">Everything stays private to this browser&apos;s workspace.</p>
               </div>
               {data.resumes.length > 0 && data.jobs.length > 0 && (
@@ -172,11 +184,8 @@ export default function Dashboard() {
                             {resumeName(m.resume_id)} · matched {timeAgo(m.created_at)}
                           </span>
                         </span>
-                        <span className="flex items-center gap-3 sm:w-72">
-                          <Meter value={m.score.coverage ?? 0} label="Requirement coverage" className="flex-1" />
-                          <span className="w-12 text-right font-mono text-sm">{Math.round((m.score.coverage ?? 0) * 100)}%</span>
-                        </span>
-                        <span className="text-xs text-ink-3 sm:w-36 sm:text-right">
+                        <CoverageRing coverage={m.score.coverage ?? 0} size={44} label={`${Math.round((m.score.coverage ?? 0) * 100)}% requirement coverage`} />
+                        <span className="rounded-full bg-sunk px-2.5 py-1 text-xs text-ink-2 sm:text-right">
                           {m.score.must_met}/{m.score.must_total} required met
                         </span>
                       </Link>
@@ -263,5 +272,43 @@ function CheckSummary({ counts }: { counts: ResumeInfo["check_counts"] }) {
     <span className={clsx("shrink-0 rounded-full px-2 py-0.5 text-2xs font-medium", toFix ? "bg-warn-soft text-warn" : "bg-ok-soft text-ok")}>
       {toFix ? `${toFix} to fix` : "Reads well"}
     </span>
+  );
+}
+
+/** A static, illustrative match report: shows what you get before you upload anything. */
+function HeroPreview() {
+  const rows = [
+    { status: "met", kind: "must", text: "4+ years building backend services", quote: "Backend engineer with four years building payment APIs" },
+    { status: "met", kind: "must", text: "Event-driven systems (Kafka or similar)", quote: "moving fraud scoring to an asynchronous Kafka consumer" },
+    { status: "partial", kind: "must", text: "Kubernetes in a public cloud", quote: "Infrastructure: Docker, Kubernetes, AWS" },
+    { status: "missing", kind: "nice", text: "gRPC service design", quote: null },
+  ] as const;
+  return (
+    <figure aria-label="Example match report" className="relative">
+      <div aria-hidden className="absolute -inset-4 -z-10 rounded-[32px] bg-[radial-gradient(circle_at_70%_20%,rgb(var(--accent)/0.18),transparent_60%),radial-gradient(circle_at_20%_90%,rgb(var(--mark)/0.35),transparent_55%)]" />
+      <div className="card p-5 shadow-lift">
+        <div className="flex items-center gap-4">
+          <CoverageRing coverage={0.74} size={88} label="Example: 74% requirement coverage" />
+          <div>
+            <p className="eyebrow">Example match</p>
+            <p className="font-display text-xl font-bold tracking-[-0.02em]">Senior Backend Engineer</p>
+            <p className="text-xs text-ink-3">5 of 7 required shown on the resume</p>
+          </div>
+        </div>
+        <ul className="mt-4 space-y-2">
+          {rows.map((r) => (
+            <li key={r.text} className="rounded-tile border border-line bg-paper/60 px-3 py-2.5">
+              <div className="flex items-center gap-2">
+                <StatusPill status={r.status} />
+                <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.text}</span>
+                <KindTag kind={r.kind} />
+              </div>
+              {r.quote && <p className="mt-1.5 truncate rounded-r-lg border-l-[3px] border-mark-strong bg-mark/20 py-0.5 pl-2 text-xs text-ink-2">“{r.quote}”</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <figcaption className="mt-3 text-center text-xs text-ink-3">Illustration of a report. Every judgement quotes your resume.</figcaption>
+    </figure>
   );
 }

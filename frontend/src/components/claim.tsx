@@ -26,7 +26,7 @@ export function CitationChip({ c }: { c: Citation }) {
   const title = `“${c.quote}”\n${SUPPORT_HELP[c.status]}`;
   if (c.source === "job") {
     return (
-      <span title={title} className={clsx("inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-2xs", CHIP[c.status])}>
+      <span title={title} className={clsx("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-2xs", CHIP[c.status])}>
         <SupportIcon support={c.status} className="h-3 w-3" /> {label}
       </span>
     );
@@ -37,7 +37,7 @@ export function CitationChip({ c }: { c: Citation }) {
       onClick={() => show(c)}
       title={title}
       aria-label={`Show in resume: ${label}. ${SUPPORT_LABEL[c.status]}.`}
-      className={clsx("inline-flex max-w-full items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-2xs transition-colors", CHIP[c.status])}
+      className={clsx("inline-flex max-w-full items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-2xs transition-colors", CHIP[c.status])}
     >
       <SupportIcon support={c.status} className="h-3 w-3 shrink-0" />
       <span className="truncate">{label}</span>
@@ -49,7 +49,7 @@ export function CitationChip({ c }: { c: Citation }) {
 export function Quote({ c }: { c: Citation }) {
   return (
     <figure className="mt-1.5 flex items-start gap-2">
-      <blockquote className="min-w-0 flex-1 border-l-2 border-mark pl-2.5 font-serif text-[14px] italic leading-snug text-ink-2">“{c.quote}”</blockquote>
+      <blockquote className="min-w-0 flex-1 rounded-r-lg border-l-[3px] border-mark-strong bg-mark/20 py-1 pl-2.5 pr-2 text-[13.5px] leading-snug text-ink-2">“{c.quote}”</blockquote>
       <CitationChip c={c} />
     </figure>
   );
@@ -61,7 +61,7 @@ export function ClaimView({ claim, className }: { claim: Claim; className?: stri
     <div className={className}>
       <p className={clsx("reading text-[15.5px]", shaky && "text-ink-2")}>
         {claim.kind === "inferred" && (
-          <span className="mr-1.5 inline-block -translate-y-px rounded bg-accent-soft px-1.5 py-px align-middle font-sans text-2xs font-medium text-accent" title="Shortlist's judgement, not something your resume states.">
+          <span className="mr-1.5 inline-block -translate-y-px rounded-full bg-accent-soft px-2 py-px align-middle font-sans text-2xs font-medium text-accent" title="Shortlist's judgement, not something your resume states.">
             Judgement
           </span>
         )}

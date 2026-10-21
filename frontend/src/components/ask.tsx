@@ -55,7 +55,7 @@ export function AskPanel({ resumeId }: { resumeId: string }) {
     <div className="flex min-h-full flex-col">
       {turns.length === 0 && (
         <div className="mb-5">
-          <p className="font-serif text-lg">Ask about your resume.</p>
+          <p className="font-display text-lg">Ask about your resume.</p>
           <p className="mt-1 text-sm text-ink-2">Useful for interview prep: answers come only from what your resume says, with the lines they rely on.</p>
         </div>
       )}

@@ -36,7 +36,7 @@ export default function ResumePage() {
   if (error)
     return (
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <p className="font-serif text-2xl">This resume isn&apos;t available.</p>
+        <p className="font-display text-2xl">This resume isn&apos;t available.</p>
         <p className="mt-2 text-sm text-ink-2">{error}</p>
         <Link href="/" className="btn-secondary mt-6">
           Back to the dashboard
@@ -54,20 +54,22 @@ export default function ResumePage() {
   return (
     <DocProvider docs={[doc]}>
       <Split doc={doc} header={<Header resume={resume} onRenamed={(label) => setResume({ ...resume, label })} />}>
-        <div role="tablist" aria-label="Resume tools" className="sticky top-0 z-10 flex gap-1 border-b border-line bg-paper px-4 pt-3">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => setTab(t.id)}
-              className={clsx("-mb-px border-b-2 px-3 pb-2.5 pt-1 text-sm", tab === t.id ? "border-ink font-medium" : "border-transparent text-ink-3 hover:text-ink")}
-            >
-              {t.label}
-            </button>
-          ))}
+        <div className="sticky top-0 z-10 bg-paper/90 px-4 pb-3 pt-4 backdrop-blur">
+          <div role="tablist" aria-label="Resume tools" className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-surface p-1 shadow-card">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={tab === t.id}
+                onClick={() => setTab(t.id)}
+                className={clsx("whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm transition-colors", tab === t.id ? "bg-accent font-medium text-accent-ink" : "text-ink-2 hover:text-ink")}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div role="tabpanel" className="px-5 py-5">
+        <div role="tabpanel" className="px-5 pb-8 pt-1">
           {tab === "review" && <ChecksReport checks={resume.checks} resumeId={resume.id} />}
           {tab === "profile" && <ProfileTab resumeId={resume.id} />}
           {tab === "improve" && <ImproveTab resume={resume} />}
@@ -83,11 +85,12 @@ function Header({ resume, onRenamed }: { resume: ResumeFull; onRenamed: (label: 
   const [label, setLabel] = useState(resume.label);
   const c = resume.parsed.contact;
   return (
-    <div className="flex items-center gap-3 border-b border-line px-4 py-2.5 sm:px-6">
-      <Link href="/" className="btn-ghost h-8 w-8 p-0" aria-label="Back to dashboard">
+    <div className="flex items-center gap-3 px-4 pb-3 pt-4 sm:px-6">
+      <Link href="/" className="btn-secondary h-10 w-10 shrink-0 p-0" aria-label="Back to dashboard">
         <ArrowLeft className="h-4 w-4" />
       </Link>
       <div className="min-w-0 flex-1">
+        <p className="eyebrow">Resume</p>
         {editing ? (
           <form
             onSubmit={async (e) => {
@@ -103,7 +106,7 @@ function Header({ resume, onRenamed }: { resume: ResumeFull; onRenamed: (label: 
             <button className="btn-primary h-8 text-xs">Save</button>
           </form>
         ) : (
-          <h1 className="flex items-center gap-2 truncate font-serif text-[17px] font-semibold">
+          <h1 className="flex items-center gap-2 truncate font-display text-[22px] font-bold leading-tight tracking-[-0.02em]">
             {resume.label}
             <button onClick={() => setEditing(true)} className="text-ink-3 hover:text-ink" aria-label="Rename resume">
               <Pencil className="h-3.5 w-3.5" />
@@ -141,7 +144,7 @@ function ProfileTab({ resumeId }: { resumeId: string }) {
   const listed = p.skills.filter((s) => s.strength === "listed");
   return (
     <div className="animate-rise">
-      <p className="font-serif text-xl font-semibold">{p.headline}</p>
+      <p className="font-display text-xl font-semibold">{p.headline}</p>
       <div className="mt-3">
         <GroundingNote g={p.grounding} />
       </div>
