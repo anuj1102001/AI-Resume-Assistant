@@ -1,0 +1,20 @@
+Product Designer (Healthcare) — Calmwater Health, Pune
+
+We build software that helps clinics run their day. We're looking for a product designer to own patient-facing journeys.
+
+Responsibilities
+- Plan and run user research and usability testing with patients and clinic staff.
+- Turn findings into flows, prototypes and polished UI in Figma.
+- Contribute to and help govern our design system.
+- Work closely with engineers through delivery.
+
+You should have
+- 3+ years of product design experience with shipped work.
+- A portfolio showing end-to-end process, from research to shipped UI.
+- Strong interaction design and information architecture skills.
+- Experience designing accessible interfaces (WCAG).
+
+Bonus
+- Healthcare experience.
+- Ability to prototype in code (HTML/CSS or React).
+- Experience with quantitative research or product analytics.

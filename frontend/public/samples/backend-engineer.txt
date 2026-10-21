@@ -1,0 +1,23 @@
+Senior Backend Engineer, Payments Platform — Fernwood Fintech (Bengaluru, hybrid)
+
+About the role
+You'll own the services that move money for 3 million users: checkout, refunds and payouts.
+
+What you'll do
+- Design and run high-throughput APIs where correctness matters more than features.
+- Lead migrations and reliability work, and mentor other engineers.
+
+Requirements
+- 4+ years of backend engineering experience.
+- Strong in Go or Java.
+- Production experience with PostgreSQL, including schema design and migrations.
+- Experience with event streaming (Kafka or similar).
+- Experience running services on Kubernetes in a public cloud (AWS or GCP).
+- A track record of improving latency or reliability, with numbers to show for it.
+
+Nice to have
+- Payments or fintech domain experience.
+- Experience with Terraform.
+- Experience with gRPC.
+
+We offer competitive pay, ESOPs and a learning budget.

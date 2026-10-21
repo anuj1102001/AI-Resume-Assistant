@@ -1,0 +1,23 @@
+Rohan Das
+Machine Learning Engineer · Hyderabad
+rohan.das@example.com | +91 90000 11223 | linkedin.com/in/rohandas-ml
+
+Work Experience
+ML Engineer, Orbit Logistics | Aug 2022 – Present
+• Trained a PyTorch demand-forecasting model that reduced stock-outs by 18% across 60 warehouses.
+• Deployed models as FastAPI services on AWS with Docker, serving 3 million predictions a day.
+• Built a retrieval-augmented generation assistant over shipping manuals using LangChain and a FAISS vector store.
+
+Data Scientist, Quanta Insights | Jun 2020 – Jul 2022
+• Developed NLP classifiers for support tickets with scikit-learn and Hugging Face transformers.
+• Ran A/B tests on recommendation models and reported results to product managers.
+
+Education
+M.Tech, Artificial Intelligence, IIIT Hyderabad, 2018 – 2020
+B.E., Electronics, Osmania University, 2014 – 2018
+
+Technical Skills
+Python, PyTorch, TensorFlow, scikit-learn, Hugging Face, LangChain, FAISS, SQL, Docker, AWS, Spark
+
+Publications
+Short-horizon demand forecasting with sparse signals, workshop paper, 2021

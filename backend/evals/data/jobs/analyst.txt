@@ -1,0 +1,16 @@
+Junior Data Analyst — Marigold Retail, Pune
+
+Join our analytics team supporting 200 stores. You'll build the reports and dashboards our managers use every week.
+
+What we're looking for
+- Degree in statistics, economics, computer science or a related field.
+- Strong SQL for querying large datasets.
+- Experience building dashboards in Power BI or Tableau.
+- Advanced Excel.
+- Python (Pandas) for data cleaning and analysis.
+- Clear communication of findings to non-technical stakeholders.
+
+Preferred
+- Retail or e-commerce experience.
+- Experience with A/B testing or experimentation.
+- Familiarity with dbt or cloud data warehouses such as BigQuery.

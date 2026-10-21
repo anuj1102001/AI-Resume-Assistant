@@ -1,0 +1,74 @@
+{"resume": "priya", "job": "backend", "kind": "must", "text": "4+ years of backend engineering experience", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "must", "text": "Strong in Go or Java", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "must", "text": "Production experience with PostgreSQL, including schema design and migrations", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "must", "text": "Experience with event streaming (Kafka or similar)", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "must", "text": "Experience running services on Kubernetes in a public cloud (AWS or GCP)", "gold": "partial"}
+{"resume": "priya", "job": "backend", "kind": "must", "text": "A track record of improving latency or reliability, with numbers", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "nice", "text": "Payments or fintech domain experience", "gold": "met"}
+{"resume": "priya", "job": "backend", "kind": "nice", "text": "Experience with Terraform", "gold": "partial"}
+{"resume": "priya", "job": "backend", "kind": "nice", "text": "Experience with gRPC", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "must", "text": "3+ years of software engineering experience, including production Python", "gold": "met"}
+{"resume": "rohan", "job": "genai", "kind": "must", "text": "Hands-on experience building RAG systems with embeddings and a vector database", "gold": "met"}
+{"resume": "rohan", "job": "genai", "kind": "must", "text": "Experience evaluating LLM output (offline eval sets, faithfulness or hallucination metrics)", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "must", "text": "Experience with prompt engineering and structured outputs", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "must", "text": "Experience deploying APIs with Docker on a cloud platform", "gold": "met"}
+{"resume": "rohan", "job": "genai", "kind": "nice", "text": "Experience reducing LLM latency or cost (caching, model routing)", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "nice", "text": "Experience with fine-tuning (LoRA or similar)", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "nice", "text": "Legal or compliance domain experience", "gold": "missing"}
+{"resume": "rohan", "job": "genai", "kind": "nice", "text": "Observability for LLM systems (tracing, logging)", "gold": "missing"}
+{"resume": "kavya", "job": "genai", "kind": "must", "text": "3+ years of software engineering experience, including production Python", "gold": "met"}
+{"resume": "kavya", "job": "genai", "kind": "must", "text": "Hands-on experience building RAG systems with embeddings and a vector database", "gold": "met"}
+{"resume": "kavya", "job": "genai", "kind": "must", "text": "Experience evaluating LLM output (offline eval sets, faithfulness or hallucination metrics)", "gold": "met"}
+{"resume": "kavya", "job": "genai", "kind": "must", "text": "Experience with prompt engineering and structured outputs", "gold": "partial"}
+{"resume": "kavya", "job": "genai", "kind": "must", "text": "Experience deploying APIs with Docker on a cloud platform", "gold": "partial"}
+{"resume": "kavya", "job": "genai", "kind": "nice", "text": "Experience reducing LLM latency or cost (caching, model routing)", "gold": "met"}
+{"resume": "kavya", "job": "genai", "kind": "nice", "text": "Experience with fine-tuning (LoRA or similar)", "gold": "missing"}
+{"resume": "kavya", "job": "genai", "kind": "nice", "text": "Legal or compliance domain experience", "gold": "met"}
+{"resume": "kavya", "job": "genai", "kind": "nice", "text": "Observability for LLM systems (tracing, logging)", "gold": "partial"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "3+ years of product design experience with shipped work", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "A portfolio showing end-to-end process, from research to shipped UI", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "Plan and run user research and usability testing", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "Turn findings into flows, prototypes and polished UI in Figma", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "Contribute to and help govern a design system", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "Strong interaction design and information architecture skills", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "must", "text": "Experience designing accessible interfaces (WCAG)", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "nice", "text": "Healthcare experience", "gold": "met"}
+{"resume": "arjun", "job": "designer", "kind": "nice", "text": "Ability to prototype in code (HTML/CSS or React)", "gold": "partial"}
+{"resume": "arjun", "job": "designer", "kind": "nice", "text": "Experience with quantitative research or product analytics", "gold": "partial"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Degree in statistics, economics, computer science or a related field", "gold": "met"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Strong SQL for querying large datasets", "gold": "partial"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Experience building dashboards in Power BI or Tableau", "gold": "met"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Advanced Excel", "gold": "partial"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Python (Pandas) for data cleaning and analysis", "gold": "met"}
+{"resume": "neha", "job": "analyst", "kind": "must", "text": "Clear communication of findings to non-technical stakeholders", "gold": "partial"}
+{"resume": "neha", "job": "analyst", "kind": "nice", "text": "Retail or e-commerce experience", "gold": "met"}
+{"resume": "neha", "job": "analyst", "kind": "nice", "text": "Experience with A/B testing or experimentation", "gold": "missing"}
+{"resume": "neha", "job": "analyst", "kind": "nice", "text": "Familiarity with dbt or cloud data warehouses such as BigQuery", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "3+ years of product design experience with shipped work", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "A portfolio showing end-to-end process, from research to shipped UI", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "Plan and run user research and usability testing", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "Turn findings into flows, prototypes and polished UI in Figma", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "Contribute to and help govern a design system", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "Strong interaction design and information architecture skills", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "must", "text": "Experience designing accessible interfaces (WCAG)", "gold": "partial"}
+{"resume": "vikram", "job": "designer", "kind": "nice", "text": "Healthcare experience", "gold": "missing"}
+{"resume": "vikram", "job": "designer", "kind": "nice", "text": "Ability to prototype in code (HTML/CSS or React)", "gold": "met"}
+{"resume": "vikram", "job": "designer", "kind": "nice", "text": "Experience with quantitative research or product analytics", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "must", "text": "3+ years of software engineering experience, including production Python", "gold": "met"}
+{"resume": "priya", "job": "genai", "kind": "must", "text": "Hands-on experience building RAG systems with embeddings and a vector database", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "must", "text": "Experience evaluating LLM output (offline eval sets, faithfulness or hallucination metrics)", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "must", "text": "Experience with prompt engineering and structured outputs", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "must", "text": "Experience deploying APIs with Docker on a cloud platform", "gold": "partial"}
+{"resume": "priya", "job": "genai", "kind": "nice", "text": "Experience reducing LLM latency or cost (caching, model routing)", "gold": "partial"}
+{"resume": "priya", "job": "genai", "kind": "nice", "text": "Experience with fine-tuning (LoRA or similar)", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "nice", "text": "Legal or compliance domain experience", "gold": "missing"}
+{"resume": "priya", "job": "genai", "kind": "nice", "text": "Observability for LLM systems (tracing, logging)", "gold": "partial"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "4+ years of backend engineering experience", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "Strong in Go or Java", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "Production experience with PostgreSQL, including schema design and migrations", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "Experience with event streaming (Kafka or similar)", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "Experience running services on Kubernetes in a public cloud (AWS or GCP)", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "must", "text": "A track record of improving latency or reliability, with numbers", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "nice", "text": "Payments or fintech domain experience", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "nice", "text": "Experience with Terraform", "gold": "missing"}
+{"resume": "neha", "job": "backend", "kind": "nice", "text": "Experience with gRPC", "gold": "missing"}

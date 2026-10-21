@@ -1,0 +1,29 @@
+{
+  "results": {
+    "v1": {
+      "coverage": 0.5,
+      "accuracy": 0.216,
+      "evidence_precision": 1.0,
+      "evidence_recall": 0.095,
+      "evidence_f1": 0.174,
+      "over_claim_rate": 0.0
+    },
+    "v2-keywords": {
+      "coverage": 0.838,
+      "accuracy": 0.622,
+      "evidence_precision": 1.0,
+      "evidence_recall": 0.738,
+      "evidence_f1": 0.849,
+      "over_claim_rate": 0.0
+    },
+    "v2-llm": {
+      "coverage": 1.0,
+      "accuracy": 0.905,
+      "evidence_precision": 0.953,
+      "evidence_recall": 0.976,
+      "evidence_f1": 0.965,
+      "over_claim_rate": 0.0
+    },
+    "v2-llm_date": "2026-10-21"
+  }
+}

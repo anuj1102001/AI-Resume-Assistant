@@ -1,0 +1,27 @@
+ARJUN MEHTA
+Product Designer
+Pune · arjun.mehta@example.com · 98220 55667 · arjunmehta.design
+
+PROFILE
+Product designer with five years in fintech and healthcare, turning research into shipped interfaces and design systems.
+
+PROFESSIONAL EXPERIENCE
+Senior Product Designer — Medilink Health
+2023 – Present
+- Redesigned appointment booking for 120 clinics; task completion in usability tests rose from 61% to 89%.
+- Built and maintained the Medilink design system in Figma: 140 components with accessibility notes for WCAG 2.1 AA.
+- Ran 30 user interviews with receptionists and doctors and turned them into journey maps that set the roadmap.
+- Partnered with engineering to ship a React component library aligned with the design tokens.
+
+Product Designer — Ledgerly
+2020 – 2023
+- Designed the onboarding flow for a small-business accounting app, cutting drop-off at bank linking by 22%.
+- Prototyped new invoice templates in Figma and validated them with 12 usability tests.
+- Wrote the content guidelines for error messages and empty states.
+
+EDUCATION
+Bachelor of Design (Interaction Design), MIT Institute of Design, Pune
+2016 – 2020
+
+CORE COMPETENCIES
+User research, usability testing, interaction design, design systems, prototyping, information architecture, accessibility, Figma, Framer, basic HTML and CSS
