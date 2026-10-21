@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # "gemini" in production. "offline-demo" produces rule-based placeholders (labelled not-AI) so the UI runs without a key.
     llm_provider: str = "gemini"
     gemini_api_key: str | None = Field(default=None, repr=False)
-    gemini_model: str = "gemini-3.5-flash"
+    gemini_model: str = "gemini-3.5-flash-lite"  # free tier caps gemini-3.5-flash at 20 requests a day
     llm_timeout_s: float = 90.0
     llm_max_retries: int = 2
 

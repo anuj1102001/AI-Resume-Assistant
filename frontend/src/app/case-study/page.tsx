@@ -30,7 +30,7 @@ export default function CaseStudy() {
           ["Role", "Product, design and engineering"],
           ["Stack", "Python, FastAPI, Gemini, Next.js"],
           ["Core", "Parser, checks, hybrid RAG, guardrails"],
-          ["Status", "Working prototype; AI evals pending a key"],
+          ["Status", "Working prototype; parsing and matching evals run"],
         ].map(([k, v]) => (
           <div key={k}>
             <dt className="eyebrow">{k}</dt>
@@ -170,17 +170,18 @@ export default function CaseStudy() {
           caption="Requirement matching (74 requirements, 8 resume–job pairs)"
           head={["Metric", "v1 keywords", "v2 keywords", "v2 AI"]}
           rows={[
-            ["Requirements it can assess", "0.5", "0.838", "pending"],
-            ["Accuracy (met / partial / missing)", "0.216", "0.622", "pending"],
-            ["Evidence detection F1", "0.174", "0.849", "pending"],
-            ["Over-claim rate", "0.0", "0.0", "pending"],
+            ["Requirements it can assess", "0.5", "0.838", "1.0"],
+            ["Accuracy (met / partial / missing)", "0.216", "0.622", "0.905"],
+            ["Evidence detection F1", "0.174", "0.849", "0.965"],
+            ["Over-claim rate", "0.0", "0.0", "0.0"],
           ]}
         />
         <p>
           <strong>Read with care:</strong> v2 was developed while looking at these files and the labels were written by the same person, so these numbers show the
           change from v1 on known cases, not accuracy on unseen resumes. Keyword methods can&apos;t judge requirements like &ldquo;a track record of improving
-          latency&rdquo;, which is why the match itself uses retrieval and the model. The AI column will be filled by{" "}
-          <code className="font-mono text-sm">evals/run_matching.py --llm</code> once a Gemini key is configured.
+          latency&rdquo;, which is why the match itself uses retrieval and the model. The AI column comes from{" "}
+          <code className="font-mono text-sm">evals/run_matching.py --llm</code>, run on 2026-10-21 with gemini-3.5-flash-lite: one call per resume–job pair, quotes
+          verified, and an unverifiable &ldquo;met&rdquo; downgraded, exactly as in the product. It never marked a missing requirement as met.
         </p>
       </Section>
 

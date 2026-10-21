@@ -4,7 +4,7 @@ Check how your resume reads to recruiters and tracking systems, match it to a jo
 
 > This repository was the *AI Resume Assistant* (v1: Streamlit + FastAPI chatbot with an "ATS score"). Version 2 is a rebuild; see [what changed](#what-changed-from-v1).
 
-**Live demo:** _coming soon (being deployed)_ · **Case study:** `/case-study` in the app · **Status:** working prototype; AI-matching eval pending an API key
+**Live demo:** _coming soon (being deployed)_ · **Case study:** `/case-study` in the app · **Status:** working prototype; parsing and matching evals run
 
 ## What it does
 
@@ -54,12 +54,12 @@ No API key needed; both run in CI. Six synthetic resumes in different formats (o
 
 | Requirement matching | v1 keywords | v2 keywords | v2 AI |
 |---|---|---|---|
-| Can assess | 0.5 | 0.838 | pending |
-| Accuracy (3-class) | 0.216 | 0.622 | pending |
-| Evidence F1 | 0.174 | 0.849 | pending |
-| Over-claim rate | 0.0 | 0.0 | pending |
+| Can assess | 0.5 | 0.838 | 1.0 |
+| Accuracy (3-class) | 0.216 | 0.622 | 0.905 |
+| Evidence F1 | 0.174 | 0.849 | 0.965 |
+| Over-claim rate | 0.0 | 0.0 | 0.0 |
 
-**Caveat:** v2 was developed while looking at these files, and the labels were written by the same person. These numbers show the v1-to-v2 change on known cases, not accuracy on unseen resumes. Details: [`backend/evals/results/`](backend/evals/results/). The AI column comes from `python -m evals.run_matching --llm` once a key is set.
+**Caveat:** v2 was developed while looking at these files, and the labels were written by the same person. These numbers show the v1-to-v2 change on known cases, not accuracy on unseen resumes. Details: [`backend/evals/results/`](backend/evals/results/). The AI column is `python -m evals.run_matching --llm`, run on 2026-10-21 with `gemini-3.5-flash-lite`, with the product's quote verification and downgrade rule applied.
 
 ## Run it locally
 
@@ -115,7 +115,7 @@ v1's requirements file was UTF-16 and missed five imported packages; the README 
 
 ## Limitations and next steps
 
-- Synthetic evaluation data; real, consented resumes labelled by someone else are the next step. AI-match eval pending a key. No usability testing yet (study plan in the case study).
+- Synthetic evaluation data; real, consented resumes labelled by someone else are the next step. No usability testing yet (study plan in the case study).
 - No OCR for image-only resumes; anonymous workspaces without accounts.
 
 ## Skills this project demonstrates
