@@ -201,6 +201,7 @@ function Steps() {
 function Features() {
   const items = [
     { src: "/product/match.png", title: "Job matching, requirement by requirement", body: "Coverage at the top, then every requirement judged with quotes from your resume. Required items are marked, and gaps come with a specific next step." },
+    { src: "/product/assistant.png", title: "An assistant that cites both documents", body: "Ask about your fit for a role. Facts cite your resume or the job ad, comparisons are labelled as judgements, and every answer lists the passages it searched." },
     { src: "/product/tailor.png", title: "Rewrites that keep your facts", body: "Three versions per bullet, each with its reasoning. New numbers or skills are flagged, and questions suggest what would make it stronger." },
     { src: "/product/profile.png", title: "Skills you show, not just list", body: "Your profile separates skills your work demonstrates from skills you only list, so you know what a recruiter can actually see." },
     { src: "/product/review.png", title: "Readability checks with reasons", body: "Layout, headings, contact details, bullets, dates and more. Each check shows the lines involved, why it matters and what to do." },
