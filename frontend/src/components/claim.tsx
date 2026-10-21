@@ -45,11 +45,11 @@ export function CitationChip({ c }: { c: Citation }) {
   );
 }
 
-/** A quote from the resume, shown inline with its source chip. */
-export function Quote({ c }: { c: Citation }) {
+/** A quote from the resume with its source chip: side by side, or stacked where space is narrow. */
+export function Quote({ c, stacked = false }: { c: Citation; stacked?: boolean }) {
   return (
-    <figure className="mt-1.5 flex items-start gap-2">
-      <blockquote className="min-w-0 flex-1 rounded-r-lg border-l-[3px] border-mark-strong bg-mark/20 py-1 pl-2.5 pr-2 text-[13.5px] leading-snug text-ink-2">“{c.quote}”</blockquote>
+    <figure className={clsx("mt-1.5 flex gap-2", stacked ? "flex-col items-start gap-1" : "items-start")}>
+      <blockquote className="min-w-0 flex-1 self-stretch rounded-r-lg border-l-[3px] border-mark-strong bg-mark/20 py-1 pl-2.5 pr-2 text-[13.5px] leading-snug text-ink-2">“{c.quote}”</blockquote>
       <CitationChip c={c} />
     </figure>
   );
