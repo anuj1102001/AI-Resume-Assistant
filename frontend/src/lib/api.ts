@@ -21,6 +21,7 @@ export type Parsed = {
   entries: Entry[];
   skills_listed: string[];
   experience_months: number | null;
+  corrections?: { sections?: Record<string, string>; name?: string | null; contact?: Record<string, string | null>; skills?: string[] };
 };
 
 export type ResumeInfo = {
@@ -35,6 +36,7 @@ export type ResumeInfo = {
   check_counts: Record<CheckStatus, number>;
   created_at: number;
 };
+export type Corrections = { name?: string | null; contact?: Partial<Record<"email" | "phone" | "linkedin" | "github", string | null>>; section_keys?: Record<number, string>; skills?: string[] };
 export type ResumeFull = ResumeInfo & { parsed: Parsed; checks: Check[]; layout: { pages: number; multi_column_pages: number[]; tables: number; images: number } };
 
 export type JobInfo = { id: string; title: string; company: string | null; created_at: number; has_requirements: boolean };
@@ -174,6 +176,36 @@ export const api = {
     fd.append("file", file);
     return request<{ resume: ResumeInfo; duplicate: boolean }>("/api/resumes", { method: "POST", body: fd });
   },
+  /** Upload with real byte-level progress (fetch can't report upload progress). Resolves when the server has parsed it. */
+  uploadResumeWithProgress: async (file: File, onProgress: (sent: number) => void): Promise<{ resume: ResumeInfo; duplicate: boolean }> => {
+    const send = (tok: string) =>
+      new Promise<{ status: number; body: unknown }>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `${API_URL}/api/resumes`);
+        xhr.setRequestHeader("Authorization", `Bearer ${tok}`);
+        xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+        xhr.onload = () => {
+          let body: unknown = null;
+          try {
+            body = JSON.parse(xhr.responseText);
+          } catch {}
+          resolve({ status: xhr.status, body });
+        };
+        xhr.onerror = () => reject(new TypeError("network"));
+        const fd = new FormData();
+        fd.append("file", file);
+        xhr.send(fd);
+      });
+    let r = await send(await token());
+    if (r.status === 401) {
+      resetWorkspace();
+      r = await send(await token());
+    }
+    if (r.status >= 200 && r.status < 300) return r.body as { resume: ResumeInfo; duplicate: boolean };
+    const err = (r.body as { error?: { code?: string; message?: string } } | null)?.error;
+    throw new ApiError(err?.code ?? "HTTP_" + r.status, err?.message ?? `Upload failed (${r.status}).`, r.status);
+  },
+  correctResume: (id: string, body: Corrections) => request<{ resume: ResumeFull }>(`/api/resumes/${id}/corrections`, { method: "PUT", body: JSON.stringify(body) }).then((r) => r.resume),
   resume: (id: string) => request<{ resume: ResumeFull }>(`/api/resumes/${id}`).then((r) => r.resume),
   renameResume: (id: string, label: string) => request<{ resume: ResumeInfo }>(`/api/resumes/${id}/rename`, post({ label })),
   deleteResume: (id: string) => request<void>(`/api/resumes/${id}`, { method: "DELETE" }),

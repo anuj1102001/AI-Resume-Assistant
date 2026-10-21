@@ -1,8 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { Check, Loader2, Pencil, Sparkles, TriangleAlert } from "lucide-react";
-import { useState } from "react";
+import { Check, Loader2, Pencil, RotateCcw, Sparkles, TriangleAlert, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { api, describeError, type Bullet, type Rewrite, type VariantChecks } from "@/lib/api";
 import { ErrorBox } from "./ui";
 
@@ -28,7 +28,8 @@ export function GuardrailNotes({ checks }: { checks: VariantChecks }) {
 
 /**
  * Improve one bullet: three suggested rewrites (optionally tailored to a job), each checked for invented numbers and
- * skills; the user picks, edits and saves. Nothing changes on the resume until they save.
+ * skills; the user accepts, edits or dismisses each, and can restore the original. Nothing changes until they save.
+ * `panel` renders it open and loads suggestions immediately (the workspace's assistant panel).
  */
 export function BulletImprover({
   resumeId,
@@ -36,14 +37,18 @@ export function BulletImprover({
   jobId,
   saved,
   onSaved,
+  panel = false,
 }: {
   resumeId: string;
   bullet: Bullet;
   jobId: string | null;
   saved?: string | null;
-  onSaved: (revised: string) => void;
+  /** The saved text, or null when the bullet is back to its original wording. */
+  onSaved: (revised: string | null) => void;
+  panel?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(panel);
+  const [dismissed, setDismissed] = useState<Set<number>>(new Set());
   const [data, setData] = useState<Rewrite | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,6 +59,7 @@ export function BulletImprover({
   async function load(refresh = false) {
     setLoading(true);
     setError(null);
+    setDismissed(new Set());
     try {
       setData((await api.rewrite(resumeId, bullet.id, jobId, refresh)).result);
     } catch (e) {
@@ -67,8 +73,8 @@ export function BulletImprover({
     setSaving(true);
     try {
       const r = await api.saveTailored(resumeId, bullet.id, jobId, text);
-      setDraftChecks(r.checks);
-      onSaved(r.revised);
+      setDraftChecks(r.revised === bullet.text ? null : r.checks);
+      onSaved(r.revised === bullet.text ? null : r.revised);
       setDraft(null);
     } catch (e) {
       setError(describeError(e));
@@ -77,8 +83,13 @@ export function BulletImprover({
     }
   }
 
+  useEffect(() => {
+    if (panel) load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panel, bullet.id, jobId]);
+
   return (
-    <div className="rounded-lg border border-line bg-surface">
+    <div className={clsx("rounded-tile border border-line bg-surface", panel && "shadow-card")}>
       <div className="flex items-start gap-3 px-3 py-2.5">
         <div className="min-w-0 flex-1">
           {saved ? (
@@ -90,17 +101,24 @@ export function BulletImprover({
             <p className="reading text-[14.5px]">{bullet.text}</p>
           )}
           {saved && draftChecks && <GuardrailNotes checks={draftChecks} />}
+          {saved && (
+            <button onClick={() => save(bullet.text)} disabled={saving} className="mt-1.5 inline-flex items-center gap-1 text-xs text-ink-3 hover:text-ink">
+              <RotateCcw className="h-3 w-3" aria-hidden /> Restore original
+            </button>
+          )}
         </div>
-        <button
-          onClick={() => {
-            setOpen((o) => !o);
-            if (!data && !loading) load();
-          }}
-          className="btn-secondary h-8 shrink-0 px-2.5 text-xs"
-          aria-expanded={open}
-        >
-          <Sparkles className="h-3.5 w-3.5" aria-hidden /> {saved ? "Revise" : "Improve"}
-        </button>
+        {!panel && (
+          <button
+            onClick={() => {
+              setOpen((o) => !o);
+              if (!data && !loading) load();
+            }}
+            className="btn-secondary h-8 shrink-0 px-2.5 text-xs"
+            aria-expanded={open}
+          >
+            <Sparkles className="h-3.5 w-3.5" aria-hidden /> {saved ? "Revise" : "Improve"}
+          </button>
+        )}
       </div>
       {open && (
         <div className="space-y-2 border-t border-line bg-paper/60 px-3 py-3">
@@ -112,8 +130,9 @@ export function BulletImprover({
           )}
           {data &&
             !loading &&
-            data.variants.map((v, i) => (
-              <div key={i} className="rounded-md border border-line bg-surface px-3 py-2">
+            data.variants.map((v, i) =>
+              dismissed.has(i) ? null : (
+                <div key={i} className="rounded-lg border border-line bg-surface px-3 py-2">
                 <p className="reading text-[14.5px]">{v.text}</p>
                 <p className="mt-0.5 text-xs text-ink-3">{v.rationale}</p>
                 <GuardrailNotes checks={v.checks} />
@@ -124,9 +143,16 @@ export function BulletImprover({
                   <button onClick={() => setDraft(v.text)} className="btn-ghost h-7 px-2 text-xs">
                     <Pencil className="h-3.5 w-3.5" aria-hidden /> Edit first
                   </button>
+                  <button onClick={() => setDismissed((d) => new Set(d).add(i))} className="btn-ghost ml-auto h-7 px-2 text-xs" aria-label={`Dismiss suggestion ${i + 1}`}>
+                    <X className="h-3.5 w-3.5" aria-hidden /> Dismiss
+                  </button>
                 </div>
-              </div>
-            ))}
+                </div>
+              ),
+            )}
+          {data && !loading && dismissed.size === data.variants.length && (
+            <p className="text-xs text-ink-3">All suggestions dismissed. Ask for different versions below, or write your own.</p>
+          )}
           {data && data.questions.length > 0 && (
             <div className="rounded-md bg-accent-soft px-3 py-2 text-xs text-accent">
               <p className="font-medium">To make it stronger, can you answer:</p>
@@ -154,9 +180,16 @@ export function BulletImprover({
             </div>
           )}
           {data && !loading && (
-            <button onClick={() => load(true)} className={clsx("text-xs text-ink-3 hover:text-ink")}>
-              Suggest different versions
-            </button>
+            <div className="flex flex-wrap gap-3">
+              <button onClick={() => load(true)} className="text-xs text-ink-3 hover:text-ink">
+                Suggest different versions
+              </button>
+              {draft === null && (
+                <button onClick={() => setDraft(saved ?? bullet.text)} className="text-xs text-ink-3 hover:text-ink">
+                  Write my own
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

@@ -257,7 +257,11 @@ def _split_skills(text: str) -> list[str]:
     return out
 
 
-def parse_resume(pages: list[Page]) -> ParsedResume:
+SECTION_KEYS = ("header", *SECTION_SYNONYMS, "other")
+
+
+def parse_resume(pages: list[Page], section_keys: dict[int, str] | None = None) -> ParsedResume:
+    """Parse resume pages. `section_keys` overrides the detected type of a section, by its index (user corrections)."""
     lines = _lines(pages)
     sections: list[Section] = []
     cur_key, cur_title, cur_lines, cur_page = "header", "", [], lines[0][1] if lines else 1
@@ -276,6 +280,9 @@ def parse_resume(pages: list[Page]) -> ParsedResume:
         else:
             cur_lines.append(text)
     close()
+    for i, key in (section_keys or {}).items():
+        if 0 <= i < len(sections) and key in SECTION_KEYS:
+            sections[i].key = key
 
     # Bullets and role entries.
     bullets: list[Bullet] = []

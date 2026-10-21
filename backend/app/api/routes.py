@@ -77,6 +77,19 @@ def rename_resume(rid: str, body: RenameBody, ws: str = Depends(current_workspac
     return {"resume": resumes.rename_resume(db, ws, rid, body.label)}
 
 
+class CorrectionsBody(BaseModel):
+    name: str | None = Field(default=None, max_length=80)
+    contact: dict[str, str | None] | None = None
+    section_keys: dict[int, str] | None = Field(default=None, max_length=40)
+    skills: list[str] | None = Field(default=None, max_length=100)
+
+
+@router.put("/resumes/{rid}/corrections")
+def correct_resume(rid: str, body: CorrectionsBody, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    """Fix what the parser got wrong: name, contact details, a section's type, or the skills list. Checks re-run."""
+    return {"resume": resumes.correct_resume(db, ws, rid, name=body.name, contact=body.contact, section_keys=body.section_keys, skills=body.skills)}
+
+
 @router.delete("/resumes/{rid}", status_code=204)
 def delete_resume(
     rid: str, ws: str = Depends(current_workspace), db: Database = Depends(get_db), settings: Settings = Depends(get_settings_dep)
