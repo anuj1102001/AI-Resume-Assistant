@@ -93,7 +93,7 @@ cd frontend && npm test && npm run typecheck && npm run lint
 
 ## Deploy
 
-- **Backend:** `backend/Dockerfile` runs on Hugging Face Spaces (Docker SDK, port 7860) or any container host. Secrets: `GEMINI_API_KEY`; set `CORS_ORIGINS` to the frontend URL.
+- **Backend:** Render free Docker web service from [`render.yaml`](render.yaml) (Dashboard → New → Blueprint). Render asks for `GEMINI_API_KEY` (secret) and `CORS_ORIGINS` (the frontend URL). The free plan sleeps after ~15 idle minutes, so the first request takes up to a minute (the app shows a "waking the server" notice), and SQLite storage resets on restart: fine for a demo. The same `backend/Dockerfile` runs on any container host.
 - **Frontend:** Vercel (root directory `frontend`), `NEXT_PUBLIC_API_URL` set to the backend.
 
 ## Project layout
