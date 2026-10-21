@@ -4,7 +4,11 @@ Check how your resume reads to recruiters and tracking systems, match it to a jo
 
 > This repository was the *AI Resume Assistant* (v1: Streamlit + FastAPI chatbot with an "ATS score"). Version 2 is a rebuild; see [what changed](#what-changed-from-v1).
 
-**Live demo:** _coming soon (being deployed)_ · **Case study:** `/case-study` in the app · **Status:** working prototype; parsing and matching evals run
+**Live demo:** [shortlist-resume-neon.vercel.app](https://shortlist-resume-neon.vercel.app) (free hosting: the first visit can take up to a minute to wake the server) · **Case study:** [/case-study](https://shortlist-resume-neon.vercel.app/case-study) · **Status:** working prototype; parsing and matching evals run
+
+![Match report: requirement coverage with evidence quoted from the resume](docs/screenshots/shortlist-match.png)
+
+*Real output from the live demo (gemini-3.5-flash-lite) on a synthetic resume and job ad.*
 
 ## What it does
 
@@ -15,6 +19,12 @@ Check how your resume reads to recruiters and tracking systems, match it to a jo
 | **Match** | The job ad's requirements, each judged met / partly / not shown with resume quotes; coverage computed in code; instant keyword view while the AI runs |
 | **Tailor** | Three rewrites per bullet aimed at the job, flags for anything the original doesn't say, a word diff, and a clean single-column Word export |
 | **Ask** | Interview prep from your own resume, grounded in its lines |
+
+| Each requirement judged, with quotes | Rewrites that keep to the facts |
+|---|---|
+| ![Evidence](docs/screenshots/shortlist-evidence.png) | ![Tailor](docs/screenshots/shortlist-tailor.png) |
+| **Profile: skills shown vs only listed** | **Readability checks, no made-up score** |
+| ![Profile](docs/screenshots/shortlist-profile.png) | ![Review](docs/screenshots/shortlist-review.png) |
 
 ## Architecture
 

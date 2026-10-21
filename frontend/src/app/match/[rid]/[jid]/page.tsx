@@ -311,7 +311,7 @@ function TailorTab({ resume, jobId, match }: { resume: ResumeFull; jobId: string
             {changes.map((c) => (
               <li key={c.id} className="reading text-[14px]">
                 {wordDiff(c.original, c.revised!).map((p, i) => (
-                  <span key={i} className={clsx(p.type === "added" && "rounded-sm bg-ok-soft text-ok", p.type === "removed" && "text-ink-3 line-through")}>
+                  <span key={i} className={clsx(p.type === "added" && "rounded-sm bg-ok-soft text-ok", p.type === "removed" && "mr-1 text-ink-3 line-through")}>
                     {p.text}
                   </span>
                 ))}
