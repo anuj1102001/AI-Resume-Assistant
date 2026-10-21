@@ -18,7 +18,12 @@ Check how your resume reads to recruiters and tracking systems, match it to a jo
 | **Profile** | Skills split into *shown in your work* and *only listed*, strongest achievements, and where the resume undersells you, all cited |
 | **Match** | The job ad's requirements, each judged met / partly / not shown with resume quotes; coverage computed in code; instant keyword view while the AI runs |
 | **Tailor** | Three rewrites per bullet aimed at the job, flags for anything the original doesn't say, a word diff, and a clean single-column Word export |
-| **Ask** | Interview prep from your own resume, grounded in its lines |
+| **Ask** | A career assistant over your resume and, optionally, a job ad: every fact cited to one or the other, comparisons labelled as judgements, "not enough evidence" instead of guessing, and the list of passages searched |
+| **Edit** | Original beside your version for every bullet, live rule-based clarity notes, AI suggestions with fact checks, undo/redo, restore, and Word export |
+| **Correct** | After upload, check what the parser found and fix it (section types, contact details, skills); the checks re-run |
+| **Keep** | Save gaps, insights and answers to a to-do list; export the whole workspace as JSON or delete everything |
+
+The interface is a marketing site plus a workspace (overview with one recommended next step, three-panel resume analysis, side-by-side job comparison, editor, assistant, saved items, settings). Its design system is documented on a live page built from the real components: [`/design-system`](https://shortlist-resume-neon.vercel.app/design-system).
 
 | Each requirement judged, with quotes | Rewrites that keep to the facts |
 |---|---|

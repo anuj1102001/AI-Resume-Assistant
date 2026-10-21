@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { ArrowUpRight, BookOpen, Briefcase, FileText, Home, LayoutGrid, Menu, Plus, Target, Upload, X } from "lucide-react";
+import { ArrowUpRight, Bookmark, BookOpen, Briefcase, FileText, Home, LayoutGrid, Menu, MessagesSquare, Plus, Settings, Target, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,6 +15,9 @@ const WORKSPACE: Item[] = [
   { href: "/app/resumes", label: "My resumes", icon: FileText, match: (p) => p.startsWith("/app/resumes") || p.startsWith("/resume/") },
   { href: "/app/matches", label: "Job matches", icon: Target, match: (p) => p.startsWith("/app/matches") || p.startsWith("/match/") || (p.startsWith("/jobs/") && p !== "/jobs/new") },
   { href: "/jobs/new", label: "Add a job", icon: Briefcase, match: (p) => p === "/jobs/new" },
+  { href: "/app/assistant", label: "AI assistant", icon: MessagesSquare, match: (p) => p.startsWith("/app/assistant") },
+  { href: "/app/saved", label: "Saved", icon: Bookmark, match: (p) => p.startsWith("/app/saved") },
+  { href: "/app/settings", label: "Settings", icon: Settings, match: (p) => p.startsWith("/app/settings") },
 ];
 
 const ABOUT: Item[] = [

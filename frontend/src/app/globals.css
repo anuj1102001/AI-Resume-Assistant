@@ -49,6 +49,30 @@
   }
 }
 
+/* Chosen in Settings: forces dark whatever the system says (.light forces light). */
+:root.dark {
+  --paper: 12 13 22;
+  --surface: 21 22 36;
+  --sunk: 29 31 48;
+  --line: 45 48 70;
+  --ink: 238 239 248;
+  --ink-2: 192 195 214;
+  --ink-3: 150 154 178;
+  --accent: 128 156 255;
+  --accent-soft: 24 34 78;
+  --accent-ink: 8 14 40;
+  --mark: 190 242 100;
+  --mark-strong: 163 230 53;
+  --ok: 74 222 158;
+  --ok-soft: 16 50 38;
+  --warn: 250 196 80;
+  --warn-soft: 60 44 12;
+  --bad: 252 122 150;
+  --bad-soft: 72 20 36;
+  color-scheme: dark;
+}
+
+
 html,
 body {
   background: rgb(var(--paper));

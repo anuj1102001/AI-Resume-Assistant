@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { ChevronDown, Lightbulb } from "lucide-react";
 import type { Assessment } from "@/lib/api";
 import { CitationChip, Quote } from "./claim";
+import { SaveButton } from "./save-button";
 import { KindTag, STATUS, StatusPill } from "./ui";
 
 const SUPPORT_TEXT = {
@@ -12,8 +13,11 @@ const SUPPORT_TEXT = {
   unverified: "could not be found in your resume",
 } as const;
 
+/** Where a match lives, so its gaps can be saved with a link back. */
+export type MatchCtx = { resumeId: string; jobId: string; jobTitle: string };
+
 /** One requirement as a row: what the job asks (left) against what your resume shows (right). */
-export function ComparisonRow({ a, onTailor }: { a: Assessment; onTailor: () => void }) {
+export function ComparisonRow({ a, onTailor, ctx }: { a: Assessment; onTailor: () => void; ctx: MatchCtx }) {
   const jobQuote = a.job_citations[0];
   return (
     <li className="overflow-hidden rounded-tile border border-line bg-surface shadow-card">
@@ -46,12 +50,23 @@ export function ComparisonRow({ a, onTailor }: { a: Assessment; onTailor: () => 
       {a.suggestion && (
         <div className="flex items-start gap-2 border-t border-line bg-accent-soft/60 px-4 py-2.5 text-xs text-accent">
           <Lightbulb className="mt-px h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span>
+          <span className="flex-1">
             {a.suggestion}{" "}
             <button onClick={onTailor} className="font-medium underline underline-offset-2">
               Tailor a bullet
             </button>
           </span>
+          <SaveButton
+            className="-my-0.5 shrink-0"
+            item={{
+              kind: "gap",
+              text: a.suggestion,
+              detail: { context: `${ctx.jobTitle} · ${a.text}` },
+              resume_id: ctx.resumeId,
+              job_id: ctx.jobId,
+              href: `/match/${ctx.resumeId}/${ctx.jobId}`,
+            }}
+          />
         </div>
       )}
       <details className="group border-t border-line">

@@ -10,6 +10,7 @@ import { ChecksReport } from "@/components/checks";
 import { CitationChip, ClaimView, GroundingNote } from "@/components/claim";
 import { DocProvider, toViewerDoc, useDoc } from "@/components/doc-context";
 import { BulletImprover } from "@/components/improver";
+import { SaveButton } from "@/components/save-button";
 import { ErrorBox, MetaLine, SectionTitle, Working } from "@/components/ui";
 import { Workspace3, type Pane } from "@/components/workspace3";
 import { api, describeError, type Analysis, type Bullet, type Check, type Profile, type ResumeFull } from "@/lib/api";
@@ -457,7 +458,13 @@ function ProfileTab({ resumeId }: { resumeId: string }) {
           </SectionTitle>
           <div className="space-y-3">
             {p.improvement_areas.map((c, i) => (
-              <ClaimView key={i} claim={c} />
+              <div key={i}>
+                <ClaimView claim={c} />
+                <SaveButton
+                  className="-ml-1.5 mt-1"
+                  item={{ kind: "claim", text: c.text, detail: { context: "Where your resume undersells you" }, resume_id: resumeId, href: `/resume/${resumeId}` }}
+                />
+              </div>
             ))}
           </div>
         </>

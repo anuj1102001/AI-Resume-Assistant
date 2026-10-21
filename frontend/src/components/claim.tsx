@@ -19,12 +19,15 @@ const CHIP = {
   unverified: "border-bad/25 bg-bad-soft text-bad hover:border-bad/60",
 };
 
-/** A source chip. Resume quotes open the page with the quote highlighted; job-ad quotes show the quote on hover. */
+/**
+ * A source chip. Resume quotes open the page with the quote highlighted. Job-ad quotes highlight in the job ad where
+ * it's on screen (the assistant page); elsewhere they show the quote on hover.
+ */
 export function CitationChip({ c }: { c: Citation }) {
-  const { show } = useDoc();
+  const { show, job } = useDoc();
   const label = c.source === "job" ? "job ad" : [c.section, c.page ? `p. ${c.page}` : null].filter(Boolean).join(" · ") || "resume";
   const title = `“${c.quote}”\n${SUPPORT_HELP[c.status]}`;
-  if (c.source === "job") {
+  if (c.source === "job" && !(job && c.source_id === job.id)) {
     return (
       <span title={title} className={clsx("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-2xs", CHIP[c.status])}>
         <SupportIcon support={c.status} className="h-3 w-3" /> {label}
@@ -36,7 +39,7 @@ export function CitationChip({ c }: { c: Citation }) {
       type="button"
       onClick={() => show(c)}
       title={title}
-      aria-label={`Show in resume: ${label}. ${SUPPORT_LABEL[c.status]}.`}
+      aria-label={`Show in ${c.source === "job" ? "job ad" : "resume"}: ${label}. ${SUPPORT_LABEL[c.status]}.`}
       className={clsx("inline-flex max-w-full items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-2xs transition-colors", CHIP[c.status])}
     >
       <SupportIcon support={c.status} className="h-3 w-3 shrink-0" />
@@ -55,12 +58,18 @@ export function Quote({ c, stacked = false }: { c: Citation; stacked?: boolean }
   );
 }
 
-export function ClaimView({ claim, className }: { claim: Claim; className?: string }) {
-  const shaky = claim.support === "unverified";
+export function ClaimView({ claim, className, subject = "your resume" }: { claim: Claim; className?: string; subject?: string }) {
+  // An uncited judgement is general advice, not a misquote: label it, don't flag it as an error.
+  const advice = claim.kind === "inferred" && claim.citations.length === 0;
+  const shaky = claim.support === "unverified" && !advice;
   return (
     <div className={className}>
-      <p className={clsx("reading text-[15.5px]", shaky && "text-ink-2")}>
-        {claim.kind === "inferred" && (
+      <p className={clsx("reading text-[15.5px]", (shaky || advice) && "text-ink-2")}>
+        {advice ? (
+          <span className="mr-1.5 inline-block -translate-y-px rounded-full bg-sunk px-2 py-px align-middle font-sans text-2xs font-medium text-ink-2" title="General advice, not taken from your resume or the job ad.">
+            General advice
+          </span>
+        ) : claim.kind === "inferred" && (
           <span className="mr-1.5 inline-block -translate-y-px rounded-full bg-accent-soft px-2 py-px align-middle font-sans text-2xs font-medium text-accent" title="Shortlist's judgement, not something your resume states.">
             Judgement
           </span>
@@ -74,7 +83,7 @@ export function ClaimView({ claim, className }: { claim: Claim; className?: stri
           ))}
         </div>
       )}
-      {shaky && <p className="mt-1 text-xs text-bad">We couldn&apos;t find this in your resume. Check it before relying on it.</p>}
+      {shaky && <p className="mt-1 text-xs text-bad">We couldn&apos;t find this in {subject}. Check it before relying on it.</p>}
     </div>
   );
 }

@@ -10,7 +10,7 @@ from app.llm.client import LLM
 from app.resume.keywords import keyword_overlap
 from app.retrieval.embeddings import Embedder
 from app.security import charge_llm_call, create_workspace, current_workspace
-from app.services import grounded, jobs, matching, qa, resumes, rewrite
+from app.services import grounded, jobs, matching, qa, resumes, rewrite, workspace
 
 router = APIRouter(prefix="/api")
 
@@ -156,6 +156,7 @@ def profile(
 class AskBody(BaseModel):
     question: str = Field(min_length=2, max_length=800)
     history: list[tuple[str, str]] = Field(default_factory=list, max_length=12)
+    job_id: str | None = Field(default=None, max_length=40)
 
 
 @router.post("/resumes/{rid}/ask")
@@ -170,13 +171,15 @@ def ask(
 ):
     resumes.get_resume(db, ws, rid)
     _ai(ws, db, settings, llm)
-    return qa.ask(db, settings, llm, embedder, ws, rid, body.question.strip(), body.history)
+    if body.job_id:
+        jobs.get_job(db, ws, body.job_id)  # 404 before spending an AI call
+    return qa.ask(db, settings, llm, embedder, ws, rid, body.question.strip(), body.history, body.job_id)
 
 
 @router.get("/resumes/{rid}/questions")
-def questions(rid: str, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+def questions(rid: str, job_id: str | None = None, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
     resumes.get_resume(db, ws, rid)
-    return {"analyses": qa.history(db, ws, rid)}
+    return {"analyses": qa.history(db, ws, rid, job_id)}
 
 
 class RewriteBody(BaseModel):
@@ -305,3 +308,55 @@ def keywords(resume_id: str, job_id: str, ws: str = Depends(current_workspace), 
     if not r or not j:
         raise AppError("Not found.", 404, "NOT_FOUND")
     return keyword_overlap(r["text"], j["text"], loads(r["parsed"], {}).get("experience_months"))
+
+
+# ---- saved recommendations and the workspace ------------------------------------------------------------------------
+
+
+class SavedBody(BaseModel):
+    kind: str = Field(max_length=20)
+    text: str = Field(min_length=1, max_length=2000)
+    detail: dict | None = None
+    resume_id: str | None = Field(default=None, max_length=40)
+    job_id: str | None = Field(default=None, max_length=40)
+    href: str | None = Field(default=None, max_length=300)
+
+
+class DoneBody(BaseModel):
+    done: bool
+
+
+@router.get("/saved")
+def list_saved(ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    return {"items": workspace.list_saved(db, ws)}
+
+
+@router.post("/saved", status_code=201)
+def save_item(body: SavedBody, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    return {"item": workspace.save_item(db, ws, kind=body.kind, text=body.text, detail=body.detail, resume_id=body.resume_id, job_id=body.job_id, href=body.href)}
+
+
+@router.patch("/saved/{sid}")
+def set_saved_done(sid: str, body: DoneBody, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    return {"item": workspace.set_done(db, ws, sid, body.done)}
+
+
+@router.delete("/saved/{sid}", status_code=204)
+def delete_saved(sid: str, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    workspace.delete_saved(db, ws, sid)
+
+
+@router.get("/workspace")
+def workspace_summary(ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    return workspace.summary(db, ws)
+
+
+@router.get("/workspace/export")
+def export_workspace(ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
+    return workspace.export(db, ws)
+
+
+@router.delete("/workspace", status_code=204)
+def delete_workspace(ws: str = Depends(current_workspace), db: Database = Depends(get_db), settings: Settings = Depends(get_settings_dep)):
+    workspace.delete_workspace(db, settings, ws)
+
