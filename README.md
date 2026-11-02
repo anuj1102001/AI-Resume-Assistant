@@ -83,12 +83,23 @@ flowchart LR
 - **Cost and latency per run.** Every model call (structured or tool-calling) is logged per step with tokens and latency and returned with the run. With `LANGSMITH_TRACING=true`, each step, model call and tool call is traced in LangSmith.
 
 ```bash
-POST /api/agent/runs                 {"resume_id": "...", "job_id": "..."}   -> status "awaiting_review" + proposals
+POST /api/agent/runs                 {"resume_id": "...", "job_id": "...", "investigate": false}   -> status "awaiting_review" + proposals
 GET  /api/agent/runs/{run_id}                                                -> the saved run
 POST /api/agent/runs/{run_id}/review {"decisions": [{"bullet_id": "b1", "variant": 0}, {"bullet_id": "b4", "variant": null}]}
 ```
 
-**Evaluation.** [`evals/run_agent.py`](backend/evals/run_agent.py) runs the agent on the same 74 labelled requirements and scores each requirement twice from one run: straight after `assess` (what the pipeline returns) and after investigation. That isolates what the extra step adds against what it costs in calls, tokens and latency, and lists every requirement it changed, right or wrong. Needs a key: `python -m evals.run_agent`. Results go to `backend/evals/results/agent.md`.
+**Evaluation.** [`evals/run_agent.py`](backend/evals/run_agent.py) runs the agent on the same 74 labelled requirements and scores each requirement twice from one run: straight after `assess` (what the pipeline returns) and after investigation. That isolates what the extra step adds against what it costs. Run on 2026-11-02 with `gemini-3.5-flash-lite` ([full results](backend/evals/results/agent.md)):
+
+| Per resume-job pair | Pipeline (first pass) | Agent (+ investigation) |
+|---|---|---|
+| Accuracy (3-class) | 0.986 | 0.986 |
+| Evidence F1 | 1.0 | 1.0 |
+| Over-claim rate | 0.0 | 0.0 |
+| Model calls | 1 | 3 |
+| Input tokens | 748 | 2,436 |
+| Model latency | 6.6 s | 10.2 s |
+
+**What this says:** on this set the investigation step changed nothing. The first pass already found every piece of real evidence, so the 32 requirements left "missing" were truly missing, and the agent searched them and correctly declined to upgrade any (no false upgrades). It cost 3.3x the input tokens and 3.6 s more per match. The set is too easy to show a benefit: its evidence mostly uses the requirement's own words. The next step is a harder set where evidence is paraphrased; until it shows a gain, investigation is opt-in (`"investigate": true`), not the default. (The first pass scored 0.986 here against 0.905 in `matching.md` on 2026-10-21: same prompt and model name, so single runs vary; both are reported as run.)
 
 ## Evaluation
 
@@ -139,7 +150,7 @@ cd backend && pytest && ruff check . && python -m evals.run_parsing && python -m
 cd frontend && npm test && npm run typecheck && npm run lint
 ```
 
-61 backend tests, including gold-label parsing for each resume format and a fake model that misbehaves on purpose (invented evidence must be downgraded; inflated rewrites must be flagged). The agent tests script the tool-calling model: a made-up quote must be rejected, an endless tool loop must stop at the cap, an unsafe rewrite must not be approvable, and a paused run must resume only from its own workspace.
+62 backend tests, including gold-label parsing for each resume format and a fake model that misbehaves on purpose (invented evidence must be downgraded; inflated rewrites must be flagged). The agent tests script the tool-calling model: a made-up quote must be rejected, an endless tool loop must stop at the cap, an unsafe rewrite must not be approvable, and a paused run must resume only from its own workspace.
 
 ## Deploy
 

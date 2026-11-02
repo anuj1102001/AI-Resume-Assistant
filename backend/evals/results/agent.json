@@ -1,0 +1,36 @@
+{
+  "results": {
+    "pipeline": {
+      "coverage": 1.0,
+      "accuracy": 0.986,
+      "evidence_precision": 1.0,
+      "evidence_recall": 1.0,
+      "evidence_f1": 1.0,
+      "over_claim_rate": 0.0
+    },
+    "agent": {
+      "coverage": 1.0,
+      "accuracy": 0.986,
+      "evidence_precision": 1.0,
+      "evidence_recall": 1.0,
+      "evidence_f1": 1.0,
+      "over_claim_rate": 0.0
+    }
+  },
+  "cost_per_pair": {
+    "pipeline": {
+      "llm_calls": 1,
+      "input_tokens": 748,
+      "output_tokens": 1170,
+      "model_latency_ms": 6629
+    },
+    "agent": {
+      "llm_calls": 3,
+      "input_tokens": 2436,
+      "output_tokens": 1266,
+      "model_latency_ms": 10224,
+      "wall_ms": 10760
+    }
+  },
+  "changed": []
+}

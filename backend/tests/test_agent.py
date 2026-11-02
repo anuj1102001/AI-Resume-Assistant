@@ -55,10 +55,18 @@ def _setup(c, job_extra: str = ""):
     return h, resume, job
 
 
-def _start(c, h, resume, job) -> dict:
-    r = c.post("/api/agent/runs", headers=h, json={"resume_id": resume["id"], "job_id": job["id"]})
+def _start(c, h, resume, job, investigate: bool = True) -> dict:
+    r = c.post("/api/agent/runs", headers=h, json={"resume_id": resume["id"], "job_id": job["id"], "investigate": investigate})
     assert r.status_code == 201, r.text
     return r.json()
+
+
+def test_investigation_is_off_unless_asked_for(agent_client):
+    model = ScriptedToolModel(responses=[AIMessage("", tool_calls=[call("search_resume", {"query": "Java"}, 1)])])
+    c = agent_client(model)
+    h, resume, job = _setup(c)
+    run = _start(c, h, resume, job, investigate=False)
+    assert not any(s.startswith("investigate") for s in run["steps"]) and model.i == 0
 
 
 def _by_text(run: dict, fragment: str) -> dict:

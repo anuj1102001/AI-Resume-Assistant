@@ -21,6 +21,8 @@ class RunBody(BaseModel):
     resume_id: str
     job_id: str
     propose_rewrites: bool = True
+    # Off by default: on the labelled set it changed no results at 3x the tokens (see evals/results/agent.md).
+    investigate: bool = False
 
 
 class Decision(BaseModel):
@@ -53,7 +55,7 @@ def start_run(
     if not llm.configured:
         llm.generate()  # raises a clear AI_NOT_CONFIGURED error
     charge_llm_call(ws, db, settings)
-    ctx = _context(ws, db, settings, llm, embedder, chat_model)
+    ctx = _context(ws, db, settings, llm, embedder, chat_model if body.investigate else None)
     return service.start_run(ctx, checkpointer, body.resume_id, body.job_id, body.propose_rewrites)
 
 
