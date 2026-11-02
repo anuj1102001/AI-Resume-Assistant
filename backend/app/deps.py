@@ -38,3 +38,27 @@ def _llm() -> LLM:
 
 def get_llm() -> LLM:
     return _llm()
+
+
+@lru_cache
+def _chat_model():
+    from app.agent.service import build_chat_model
+
+    return build_chat_model(get_settings())
+
+
+def get_chat_model():
+    """Tool-calling model for the agent's investigation step (None when AI is off)."""
+    return _chat_model()
+
+
+@lru_cache
+def _checkpointer():
+    from app.agent.service import sqlite_checkpointer
+
+    return sqlite_checkpointer(get_settings().data_dir / "agent.db")
+
+
+def get_checkpointer():
+    """Where agent runs are saved between steps, so a run paused for review can be resumed later."""
+    return _checkpointer()

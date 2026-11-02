@@ -57,6 +57,39 @@ flowchart LR
 - **Guardrails on rewrites:** numbers not in the original and skills that appear nowhere on the resume are flagged beside each suggestion.
 - **Shared, tested core** with [Margin](https://github.com/anuj1102001/AI-Document-Summarizer): ingestion, hybrid retrieval, quote verification, workspace security, LLM client.
 
+## Match agent (LangGraph)
+
+The same match, rebuilt as a LangGraph state machine that can search again, propose fixes and wait for the user. It sits beside the one-call pipeline above (`/api/match` is unchanged) at `/api/agent/runs`. Code: [`backend/app/agent/`](backend/app/agent/).
+
+```mermaid
+flowchart LR
+  L[load_requirements] --> R[retrieve] --> A[assess<br/>quotes verified]
+  A -- anything missing? --> I[investigate<br/>Gemini + tools]
+  I -- tool calls --> T[run_tools<br/>search_resume, record_evidence] --> I
+  I -- done or 6 turns --> C[collect_findings<br/>re-verify, missing to partial]
+  A -- nothing missing --> S[score in code]
+  C --> S --> P[propose_rewrites<br/>unsafe variants held back]
+  P --> H{{human_review<br/>run pauses}} --> AP[apply approved only]
+```
+
+**Why an agent here.** The first pass retrieves 3 passages per requirement using the requirement's own words, so evidence written differently ("built REST endpoints" for "API design") can be missed and marked "missing". The investigation step gives a tool-calling model those requirements and two tools: `search_resume` (hybrid search with its own queries) and `record_evidence`.
+
+**Where the lines are drawn:**
+
+- **The model searches; code decides.** Every quote passed to `record_evidence` is checked against the resume before it counts, and checked again when findings are collected. Invented quotes and unknown requirement ids are rejected with a message the model can act on.
+- **Upgrades are capped.** A found requirement moves from missing to *partial*, never to met, and is labelled as found by the investigator so the user can judge it.
+- **Bounded loop.** At most 4 requirements (must-haves first) and 6 model turns; after that the run continues with what it has instead of failing.
+- **A human approves every change.** Rewrites are drafted for the bullets behind partial matches. Variants that add numbers or skills the resume doesn't contain can't be approved as they are. The run then stops (`interrupt`) and is checkpointed to SQLite, so it can be resumed later, after a restart, and only from the workspace that started it.
+- **Cost and latency per run.** Every model call (structured or tool-calling) is logged per step with tokens and latency and returned with the run. With `LANGSMITH_TRACING=true`, each step, model call and tool call is traced in LangSmith.
+
+```bash
+POST /api/agent/runs                 {"resume_id": "...", "job_id": "..."}   -> status "awaiting_review" + proposals
+GET  /api/agent/runs/{run_id}                                                -> the saved run
+POST /api/agent/runs/{run_id}/review {"decisions": [{"bullet_id": "b1", "variant": 0}, {"bullet_id": "b4", "variant": null}]}
+```
+
+**Evaluation.** [`evals/run_agent.py`](backend/evals/run_agent.py) runs the agent on the same 74 labelled requirements and scores each requirement twice from one run: straight after `assess` (what the pipeline returns) and after investigation. That isolates what the extra step adds against what it costs in calls, tokens and latency, and lists every requirement it changed, right or wrong. Needs a key: `python -m evals.run_agent`. Results go to `backend/evals/results/agent.md`.
+
 ## Evaluation
 
 No API key needed; both run in CI. Six synthetic resumes in different formats (one two-column PDF, one Word file), four job ads, and 74 hand-labelled requirement judgements. v1 is the original code, run unchanged.
@@ -106,7 +139,7 @@ cd backend && pytest && ruff check . && python -m evals.run_parsing && python -m
 cd frontend && npm test && npm run typecheck && npm run lint
 ```
 
-42 backend tests, including gold-label parsing for each resume format and a fake model that misbehaves on purpose (invented evidence must be downgraded; inflated rewrites must be flagged).
+61 backend tests, including gold-label parsing for each resume format and a fake model that misbehaves on purpose (invented evidence must be downgraded; inflated rewrites must be flagged). The agent tests script the tool-calling model: a made-up quote must be rejected, an endless tool loop must stop at the cap, an unsafe rewrite must not be approvable, and a paused run must resume only from its own workspace.
 
 ## Deploy
 
@@ -122,6 +155,7 @@ backend/
   app/retrieval/  embeddings, BM25 + dense + RRF
   app/llm/        Gemini client, schemas, versioned prompts, offline demo
   app/services/   resumes, jobs, matching, rewrites and tailored versions, Q&A
+  app/agent/      LangGraph match agent: state, graph, tools, checkpointed runs
   evals/          synthetic data, gold labels, v1 baselines, eval scripts and results
 frontend/src/     dashboard, resume workspace, job, match report, case study
 ```
@@ -137,7 +171,7 @@ v1's requirements file was UTF-16 and missed five imported packages; the README 
 
 ## Skills this project demonstrates
 
-Document parsing and information extraction, hybrid RAG, LLM structured outputs with grounding and guardrails, evaluation design against a baseline, FastAPI and security, testing with adversarial model fakes, CI and Docker, and product design: explainable AI, honest metrics, interaction design for review and editing, accessibility.
+Document parsing and information extraction, hybrid RAG, LLM structured outputs with grounding and guardrails, a LangGraph agent with tool calling, human-in-the-loop review and checkpointed state, evaluation design against a baseline, FastAPI and security, testing with adversarial model fakes, CI and Docker, and product design: explainable AI, honest metrics, interaction design for review and editing, accessibility.
 
 Suited roles: AI Engineer, Generative AI Engineer, AI Application Developer, Product Designer, AI Product Designer.
 
