@@ -83,7 +83,14 @@ def export(db: Database, ws_id: str) -> dict:
     for r in db.all("SELECT * FROM resumes WHERE workspace_id = ? ORDER BY created_at", (ws_id,)):
         out_resumes.append(resumes.public_resume(r, full=True) | {"text": r["text"]})
     out_jobs = [
-        {"id": j["id"], "title": j["title"], "company": j["company"], "text": j["text"], "requirements": loads(j["requirements"]), "created_at": j["created_at"]}
+        {
+            "id": j["id"],
+            "title": j["title"],
+            "company": j["company"],
+            "text": j["text"],
+            "requirements": loads(j["requirements"]),
+            "created_at": j["created_at"],
+        }
         for j in db.all("SELECT * FROM jobs WHERE workspace_id = ? ORDER BY created_at", (ws_id,))
     ]
     analyses = [
@@ -99,7 +106,13 @@ def export(db: Database, ws_id: str) -> dict:
         for a in db.all("SELECT * FROM analyses WHERE workspace_id = ? ORDER BY created_at", (ws_id,))
     ]
     tailored = [
-        {"resume_id": t["resume_id"], "job_id": t["job_id"], "original": t["original"], "revised": t["revised"], "created_at": t["created_at"]}
+        {
+            "resume_id": t["resume_id"],
+            "job_id": t["job_id"],
+            "original": t["original"],
+            "revised": t["revised"],
+            "created_at": t["created_at"],
+        }
         for t in db.all("SELECT * FROM tailored WHERE workspace_id = ? ORDER BY created_at", (ws_id,))
     ]
     return {

@@ -26,8 +26,11 @@ def _pdf(draw) -> bytes:
 def test_ruled_tables_are_detected():
     assert inspect_pdf(_pdf(lambda p: _grid(p, 72, 120))).tables == 1
     assert inspect_pdf(_pdf(lambda p: (_grid(p, 72, 120), _grid(p, 72, 400, cols=2, rows=2)))).tables == 2
+
     # A table drawn as cell rectangles counts too.
-    cells = lambda p: [p.draw_rect(pymupdf.Rect(72 + c * 100, 120 + r * 20, 172 + c * 100, 140 + r * 20)) for r in range(2) for c in range(2)]  # noqa: E731
+    def cells(p):
+        return [p.draw_rect(pymupdf.Rect(72 + c * 100, 120 + r * 20, 172 + c * 100, 140 + r * 20)) for r in range(2) for c in range(2)]
+
     assert inspect_pdf(_pdf(cells)).tables == 1
 
 

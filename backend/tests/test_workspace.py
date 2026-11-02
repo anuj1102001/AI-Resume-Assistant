@@ -14,7 +14,9 @@ def _setup(c):
 
 def test_job_aware_answers_cite_the_job_ad(client):
     h, r, j = _setup(client)
-    res = client.post(f"/api/resumes/{r['id']}/ask", headers=h, json={"question": "Does the role offer ESOPs and a learning budget?", "job_id": j["id"]})
+    res = client.post(
+        f"/api/resumes/{r['id']}/ask", headers=h, json={"question": "Does the role offer ESOPs and a learning budget?", "job_id": j["id"]}
+    )
     assert res.status_code == 200, res.text
     cites = [c for claim in res.json()["result"]["answer"] for c in claim["citations"]]
     assert any(c["source"] == "job" and c["source_id"] == j["id"] for c in cites)
@@ -33,7 +35,13 @@ def test_asking_about_another_workspaces_job_is_refused(client):
 
 def test_saved_items_dedupe_toggle_and_follow_their_resume(client):
     h, r, j = _setup(client)
-    body = {"kind": "gap", "text": "Show Kubernetes in a bullet", "resume_id": r["id"], "job_id": j["id"], "href": f"/match/{r['id']}/{j['id']}"}
+    body = {
+        "kind": "gap",
+        "text": "Show Kubernetes in a bullet",
+        "resume_id": r["id"],
+        "job_id": j["id"],
+        "href": f"/match/{r['id']}/{j['id']}",
+    }
     first = client.post("/api/saved", headers=h, json=body).json()["item"]
     again = client.post("/api/saved", headers=h, json=body).json()["item"]
     assert first["id"] == again["id"]
@@ -66,5 +74,12 @@ def test_cors_allows_every_method_the_api_uses(client):
 
     origin = get_settings().cors_origins.split(",")[0].strip()
     for method in ("PUT", "PATCH", "DELETE"):
-        r = client.options("/api/saved/x", headers={"Origin": origin, "Access-Control-Request-Method": method, "Access-Control-Request-Headers": "authorization,content-type"})
+        r = client.options(
+            "/api/saved/x",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": method,
+                "Access-Control-Request-Headers": "authorization,content-type",
+            },
+        )
         assert r.status_code == 200 and method in r.headers["access-control-allow-methods"]

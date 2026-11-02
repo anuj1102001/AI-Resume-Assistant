@@ -200,7 +200,10 @@ def correct_resume(
     if name is not None:
         corr["name"] = name.strip()[:80] or None
     if contact is not None:
-        corr["contact"] = {**corr.get("contact", {}), **{k: ((v or "").strip()[:200] or None) for k, v in contact.items() if k in CONTACT_FIELDS}}
+        corr["contact"] = {
+            **corr.get("contact", {}),
+            **{k: ((v or "").strip()[:200] or None) for k, v in contact.items() if k in CONTACT_FIELDS},
+        }
     if skills is not None:
         seen: dict[str, None] = {}
         for s in skills:

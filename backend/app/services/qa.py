@@ -46,11 +46,16 @@ def ask(
             keep = {h.candidate.id for h in search(pool, question, embedder, k=settings.retrieval_k)} | {pool[0].id}
             pool = [c for c in pool if c.id in keep]
         job_passages = labeled.add("J", pool, page_label="")
-        retrieval += [{"label": label, "section": "Job description", "page": None, "dense_rank": None, "sparse_rank": None} for label, _, _ in job_passages]
+        retrieval += [
+            {"label": label, "section": "Job description", "page": None, "dense_rank": None, "sparse_rank": None}
+            for label, _, _ in job_passages
+        ]
     if not hits and not job_passages:
         result = {"status": "not_found", "answer": [], "follow_ups": [], "retrieval": [], "grounding": {"claims": 0, "grounded_rate": None}}
         return grounded.save(db, ws_id, "qa", new_id(), rid, jid, {"question": question}, result, Usage(llm.model))
-    out, usage = llm.generate(system=prompts.SYSTEM, prompt=prompts.answer_prompt(question, passages, history, job_passages), schema=AnswerOut)
+    out, usage = llm.generate(
+        system=prompts.SYSTEM, prompt=prompts.answer_prompt(question, passages, history, job_passages), schema=AnswerOut
+    )
     # Page numbers only exist for the resume; job-ad quotes are checked against the job passages alone.
     data, stats = grounded.ground(out.model_dump(), labeled, lambda doc_id: resumes.pages_text(db, rid) if doc_id == rid else None)
     data |= {"grounding": stats, "retrieval": retrieval}

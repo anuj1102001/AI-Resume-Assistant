@@ -87,7 +87,11 @@ class CorrectionsBody(BaseModel):
 @router.put("/resumes/{rid}/corrections")
 def correct_resume(rid: str, body: CorrectionsBody, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
     """Fix what the parser got wrong: name, contact details, a section's type, or the skills list. Checks re-run."""
-    return {"resume": resumes.correct_resume(db, ws, rid, name=body.name, contact=body.contact, section_keys=body.section_keys, skills=body.skills)}
+    return {
+        "resume": resumes.correct_resume(
+            db, ws, rid, name=body.name, contact=body.contact, section_keys=body.section_keys, skills=body.skills
+        )
+    }
 
 
 @router.delete("/resumes/{rid}", status_code=204)
@@ -333,7 +337,11 @@ def list_saved(ws: str = Depends(current_workspace), db: Database = Depends(get_
 
 @router.post("/saved", status_code=201)
 def save_item(body: SavedBody, ws: str = Depends(current_workspace), db: Database = Depends(get_db)):
-    return {"item": workspace.save_item(db, ws, kind=body.kind, text=body.text, detail=body.detail, resume_id=body.resume_id, job_id=body.job_id, href=body.href)}
+    return {
+        "item": workspace.save_item(
+            db, ws, kind=body.kind, text=body.text, detail=body.detail, resume_id=body.resume_id, job_id=body.job_id, href=body.href
+        )
+    }
 
 
 @router.patch("/saved/{sid}")
@@ -359,4 +367,3 @@ def export_workspace(ws: str = Depends(current_workspace), db: Database = Depend
 @router.delete("/workspace", status_code=204)
 def delete_workspace(ws: str = Depends(current_workspace), db: Database = Depends(get_db), settings: Settings = Depends(get_settings_dep)):
     workspace.delete_workspace(db, settings, ws)
-
